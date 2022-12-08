@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using DatebaseCP.Command;
 using DatebaseCP.Models;
 using DatebaseCP.ViewModel.Base;
 
@@ -8,14 +10,14 @@ namespace DatebaseCP.ViewModel
 {
     internal class MainWindowViewModel : BaseViewModel
     {
-        private string title;
-        private string statusBarMsg;
-        private ObservableCollection<University> universities;
-        private University selectedUniversity;
-        private ObservableCollection<Group> groups;
-        private Group selectedGroup;
-        private ObservableCollection<Student> students;
-        private Student selectedStudent;
+        private string _title;
+        private string _statusBarMsg;
+        private ObservableCollection<University> _universities;
+        private University _selectedUniversity;
+        private ObservableCollection<Group> _groups;
+        private Group _selectedGroup;
+        private ObservableCollection<Student> _students;
+        private Student _selectedStudent;
 
         public MainWindowViewModel()
         {
@@ -43,73 +45,73 @@ namespace DatebaseCP.ViewModel
 
         public string Title
         {
-            get => title;
+            get => _title;
             set
             {
-                title = value;
+                _title = value;
                 OnPropertyChanged();
             }
         }
 
         public string StatusBarMsg
         {
-            get => statusBarMsg;
+            get => _statusBarMsg;
             set
             {
-                statusBarMsg = value;
+                _statusBarMsg = value;
                 OnPropertyChanged();
             }
         }
 
         public ObservableCollection<University> Universities
         {
-            get => universities;
+            get => _universities;
             set
             {
-                universities = value;
+                _universities = value;
                 OnPropertyChanged();
             }
         }
 
         public University SelectedUniversity
         {
-            get => selectedUniversity;
+            get => _selectedUniversity;
             set
             {
-                selectedUniversity = value;
-                Groups = selectedUniversity.Groups;
+                _selectedUniversity = value;
+                Groups = _selectedUniversity.Groups;
                 OnPropertyChanged();
             }
         }
 
         public ObservableCollection<Group> Groups
         {
-            get => groups;
+            get => _groups;
             set
             {
-                groups = value;
-                SelectedGroup = groups.First();
+                _groups = value;
+                SelectedGroup = _groups.First();
                 OnPropertyChanged();
             }
         }
 
         public Group SelectedGroup
         {
-            get => selectedGroup;
+            get => _selectedGroup;
             set
             {
-                selectedGroup = value;
-                Students = selectedGroup.Students;
+                _selectedGroup = value;
+                Students = _selectedGroup.Students;
                 OnPropertyChanged();
             }
         }
 
         public ObservableCollection<Student> Students
         {
-            get => students;
+            get => _students;
             set
             {
-                students = value;
+                _students = value;
                 //SelectedStudent = students.First();
                 OnPropertyChanged();
             }
@@ -117,19 +119,30 @@ namespace DatebaseCP.ViewModel
 
         public Student SelectedStudent
         {
-            get => selectedStudent;
+            get => _selectedStudent;
             set
             {
-                selectedStudent = value;
+                _selectedStudent = value;
                 OnPropertyChanged();
             }
         }
 
-        #region commands
+        #region Commands
 
-        
+        private RelayCommand _closeAppCommand;
+
+        public RelayCommand CloseAppCommand
+        {
+            get
+            {
+                return _closeAppCommand ??= new RelayCommand(obj =>
+                {
+                    Application.Current.Shutdown();
+                });
+            }
+        }
 
         #endregion
-        
+
     }
 }
