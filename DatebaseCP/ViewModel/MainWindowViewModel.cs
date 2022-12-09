@@ -23,6 +23,8 @@ namespace DatebaseCP.ViewModel
         private Group _selectedGroup;
         private ObservableCollection<Student> _students;
         private Student _selectedStudent;
+        private ObservableCollection<Teacher> _teachers;
+        private Teacher _selectedTeacher;
 
         public MainWindowViewModel()
         {
@@ -33,15 +35,6 @@ namespace DatebaseCP.ViewModel
 
             #region test
 
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    university1.Groups.Add(new Group(i, $"Группа_{i + 1}", new Speciality(i, $"Специализация_{i+1}"), new FormOfEducation(i, $"Форма_обучения_{i + 1}")));
-            //    for (int j = 0; j < 5; j++)
-            //    {
-            //        university1.Groups[i].Students.Add(new Student(i + j, $"Фамилия_{i + j + 1}", $"Имя_{i + j + 1}", $"Отчество_{i + j + 1}", DateTime.Now.AddYears(-18 - i).AddMonths(-j).AddDays(-new Random().Next(1, 28))));
-            //    }
-            //}
-
             if (!File.Exists(_dbFileName))
             {
                 using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
@@ -50,6 +43,8 @@ namespace DatebaseCP.ViewModel
 
                     SqliteCommand command = new();
                     command.Connection = connection;
+
+                    #region students
 
                     command.CommandText = "CREATE TABLE Students(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT NOT NULL, BirthDate TEXT, Group_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
@@ -70,6 +65,10 @@ namespace DatebaseCP.ViewModel
                     command.CommandText = commandStr;
                     command.ExecuteNonQuery();
 
+                    #endregion
+
+                    #region speciality
+
                     command.CommandText = "CREATE TABLE Speciality(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
                     command.ExecuteNonQuery();
 
@@ -88,6 +87,10 @@ namespace DatebaseCP.ViewModel
                     }
                     command.CommandText = commandStr;
                     command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region formOfEducation
 
                     command.CommandText = "CREATE TABLE FormOfEducation(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
                     command.ExecuteNonQuery();
@@ -108,6 +111,10 @@ namespace DatebaseCP.ViewModel
                     command.CommandText = commandStr;
                     command.ExecuteNonQuery();
 
+                    #endregion
+
+                    #region groups
+
                     command.CommandText = "CREATE TABLE Groups(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Speciality_id INTEGER NOT NULL, FormOfEducation_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
 
@@ -126,6 +133,124 @@ namespace DatebaseCP.ViewModel
                     }
                     command.CommandText = commandStr;
                     command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region teachers
+
+                    command.CommandText = "CREATE TABLE Teachers(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT NOT NULL, BirthDate TEXT, TeachingTitle_id INTEGER NOT NULL, TeachingDegree_id INTEGER NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO Teachers (LastName, FirstName, MiddleName, BirthDate, TeachingTitle_id, TeachingDegree_id) VALUES";
+                    max = 4;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += $" ('Фамилия_{i + 1}', 'Имя_{i + 1}', 'Отчество_{i + 1}', '{DateTime.Now.AddYears(-25 - i).AddMonths(-i).AddDays(-new Random().Next(1, 28))}', '{i % 2 + 1}', '{i % 2 + 1}')";
+                        }
+                        else
+                        {
+                            commandStr += $" ('Фамилия_{i + 1}', 'Имя_{i + 1}', 'Отчество_{i + 1}', '{DateTime.Now.AddYears(-25 - i).AddMonths(-i).AddDays(-new Random().Next(1, 28))}', '{i % 2 + 1}', '{i % 2 + 1}'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region teacherTitle
+
+                    command.CommandText = "CREATE TABLE TeacherTitle(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO TeacherTitle (Name) VALUES";
+                    max = 2;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += $" ('Звание_{i + 1}')";
+                        }
+                        else
+                        {
+                            commandStr += $" ('Звание_{i + 1}'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region post
+
+                    command.CommandText = "CREATE TABLE Post(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO Post (Name) VALUES";
+                    max = 6;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += $" ('Должность_{i + 1}')";
+                        }
+                        else
+                        {
+                            commandStr += $" ('Должность_{i + 1}'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region teacherPost
+
+                    command.CommandText = "CREATE TABLE TeacherPost(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Teacher_id INTEGER NOT NULL, Post_id INTEGER NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO TeacherPost (Teacher_id, Post_id) VALUES";
+                    max = 4;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += $" ('{i + 1}', '{i + 1}'), ('{i + 1}', '{i + 2}')";
+                        }
+                        else
+                        {
+                            commandStr += $" ('{i + 1}', '{i + 1}'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region degree
+
+                    command.CommandText = "CREATE TABLE TeacherDegree(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO TeacherDegree (Name) VALUES";
+                    max = 2;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += $" ('Ученая_степень_{i + 1}')";
+                        }
+                        else
+                        {
+                            commandStr += $" ('Ученая_степень_{i + 1}'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    #endregion
+
                 }
             }
 
@@ -137,6 +262,8 @@ namespace DatebaseCP.ViewModel
             {
                 connection.Open();
 
+                #region speciality
+
                 string sqlExpression = "SELECT * FROM Speciality";
                 SqliteCommand command = new(sqlExpression, connection);
                 using (SqliteDataReader reader = command.ExecuteReader())
@@ -146,12 +273,16 @@ namespace DatebaseCP.ViewModel
                         while (reader.Read())
                         {
                             var id = int.Parse(reader["id"].ToString());
-                            var name = reader["name"].ToString();
+                            var name = reader["Name"].ToString();
 
                             university1.Specialitys.Add(new Speciality(id, name));
                         }
                     }
                 }
+
+                #endregion
+
+                #region formOfEducation
 
                 sqlExpression = "SELECT * FROM FormOfEducation";
                 command = new SqliteCommand(sqlExpression, connection);
@@ -162,12 +293,16 @@ namespace DatebaseCP.ViewModel
                         while (reader.Read())
                         {
                             var id = int.Parse(reader["id"].ToString());
-                            var name = reader["name"].ToString();
+                            var name = reader["Name"].ToString();
 
                             university1.FormOfEducations.Add(new FormOfEducation(id, name));
                         }
                     }
                 }
+
+                #endregion
+
+                #region groups
 
                 sqlExpression = "SELECT * FROM Groups";
                 command = new SqliteCommand(sqlExpression, connection);
@@ -178,7 +313,7 @@ namespace DatebaseCP.ViewModel
                         while (reader.Read())
                         {
                             var id = int.Parse(reader["id"].ToString());
-                            var name = reader["name"].ToString();
+                            var name = reader["Name"].ToString();
                             var specialitiesId = int.Parse(reader["Speciality_id"].ToString());
                             var formOfEducationId = int.Parse(reader["FormOfEducation_id"].ToString());
 
@@ -186,6 +321,10 @@ namespace DatebaseCP.ViewModel
                         }
                     }
                 }
+
+                #endregion
+
+                #region students
 
                 sqlExpression = "SELECT * FROM Students";
                 command = new SqliteCommand(sqlExpression, connection);
@@ -206,6 +345,121 @@ namespace DatebaseCP.ViewModel
                         }
                     }
                 }
+
+                #endregion
+
+                #region teacherTitle
+
+                sqlExpression = "SELECT * FROM TeacherTitle";
+                command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var title = reader["Name"].ToString();
+
+                            university1.TeachersTitle.Add(new TeacherTitle(id, title));
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region post
+
+                sqlExpression = "SELECT * FROM Post";
+                command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var name = reader["Name"].ToString();
+
+                            university1.TeacherPosts.Add(new TeacherPost(id, name));
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region degree
+
+                sqlExpression = "SELECT * FROM TeacherDegree";
+                command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var name = reader["Name"].ToString();
+
+                            university1.TeachersDegree.Add(new TeacherDegree(id, name));
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region teacher
+
+                sqlExpression = "SELECT * FROM Teachers";
+                command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var lastName = reader["LastName"].ToString();
+                            var firstName = reader["FirstName"].ToString();
+                            var middleName = reader["MiddleName"].ToString();
+                            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
+                            var titleId = int.Parse(reader["TeachingTitle_id"].ToString());
+                            var degreeId = int.Parse(reader["TeachingDegree_id"].ToString());
+                            var tmp = new Teacher(
+                                id,
+                                lastName,
+                                firstName,
+                                middleName,
+                                birthDate,
+                                university1.TeachersTitle.First(t => t.Id == titleId),
+                                university1.TeachersDegree.First(d => d.Id == degreeId)
+                                );
+                            university1.Teachers.Add(tmp);
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region teacherPost
+
+                sqlExpression = "SELECT * FROM TeacherPost";
+                command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var teacherID = int.Parse(reader["Teacher_id"].ToString());
+                            var postID = int.Parse(reader["Post_id"].ToString());
+                            university1.Teachers.First(t => t.Id == teacherID).Posts.Add(university1.TeacherPosts.First(p => p.Id == postID));
+                        }
+                    }
+                }
+
+                #endregion
 
             }
 
@@ -252,6 +506,7 @@ namespace DatebaseCP.ViewModel
             {
                 _selectedUniversity = value;
                 Groups = _selectedUniversity.Groups;
+                Teachers = _selectedUniversity.Teachers;
                 OnPropertyChanged();
             }
         }
@@ -309,6 +564,27 @@ namespace DatebaseCP.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        public ObservableCollection<Teacher> Teachers
+        {
+            get => _teachers;
+            set
+            {
+                _teachers = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Teacher SelectedTeacher
+        {
+            get => _selectedTeacher;
+            set
+            {
+                _selectedTeacher = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #region Commands
 

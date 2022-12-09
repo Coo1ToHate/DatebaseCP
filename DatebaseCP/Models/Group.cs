@@ -27,6 +27,6 @@ namespace DatebaseCP.Models
 
         public ObservableCollection<Student> Students { get; set; }
 
-        public Student Groupleader { get; set; }
+        //public Student Groupleader { get; set; }
     }
 }
