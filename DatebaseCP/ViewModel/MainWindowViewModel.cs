@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows;
 using DatebaseCP.Command;
 using DatebaseCP.Models;
+using DatebaseCP.Utils;
+using DatebaseCP.View;
 using DatebaseCP.ViewModel.Base;
 using Microsoft.Data.Sqlite;
 
@@ -13,6 +15,7 @@ namespace DatebaseCP.ViewModel
     internal class MainWindowViewModel : BaseViewModel
     {
         private readonly string _dbFileName = "data.db";
+        ADO ado = new ADO();
 
         private string _title;
         private string _statusBarMsg;
@@ -258,6 +261,14 @@ namespace DatebaseCP.ViewModel
 
             #region LoadData
 
+            university1.Specialitys = ado.GetAllSpecialities();
+            university1.FormOfEducations = ado.GetAllFormOfEducation();
+            university1.Groups = ado.GetAllGroup();
+            foreach (var g in university1.Groups)
+            {
+                g.Students = ado.GetStudentsInGroup(g);
+            }
+
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
@@ -266,85 +277,85 @@ namespace DatebaseCP.ViewModel
 
                 string sqlExpression = "SELECT * FROM Speciality";
                 SqliteCommand command = new(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var name = reader["Name"].ToString();
+                //using (SqliteDataReader reader = command.ExecuteReader())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        while (reader.Read())
+                //        {
+                //            var id = int.Parse(reader["id"].ToString());
+                //            var name = reader["Name"].ToString();
 
-                            university1.Specialitys.Add(new Speciality(id, name));
-                        }
-                    }
-                }
+                //            university1.Specialitys.Add(new Speciality(id, name));
+                //        }
+                //    }
+                //}
 
                 #endregion
 
                 #region formOfEducation
 
-                sqlExpression = "SELECT * FROM FormOfEducation";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var name = reader["Name"].ToString();
+                //sqlExpression = "SELECT * FROM FormOfEducation";
+                //command = new SqliteCommand(sqlExpression, connection);
+                //using (SqliteDataReader reader = command.ExecuteReader())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        while (reader.Read())
+                //        {
+                //            var id = int.Parse(reader["id"].ToString());
+                //            var name = reader["Name"].ToString();
 
-                            university1.FormOfEducations.Add(new FormOfEducation(id, name));
-                        }
-                    }
-                }
+                //            university1.FormOfEducations.Add(new FormOfEducation(id, name));
+                //        }
+                //    }
+                //}
 
                 #endregion
 
                 #region groups
 
-                sqlExpression = "SELECT * FROM Groups";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var name = reader["Name"].ToString();
-                            var specialitiesId = int.Parse(reader["Speciality_id"].ToString());
-                            var formOfEducationId = int.Parse(reader["FormOfEducation_id"].ToString());
+                //sqlExpression = "SELECT * FROM Groups";
+                //command = new SqliteCommand(sqlExpression, connection);
+                //using (SqliteDataReader reader = command.ExecuteReader())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        while (reader.Read())
+                //        {
+                //            var id = int.Parse(reader["id"].ToString());
+                //            var name = reader["Name"].ToString();
+                //            var specialitiesId = int.Parse(reader["Speciality_id"].ToString());
+                //            var formOfEducationId = int.Parse(reader["FormOfEducation_id"].ToString());
 
-                            university1.Groups.Add(new Group(id, name, university1.Specialitys[specialitiesId - 1], university1.FormOfEducations[formOfEducationId - 1]));
-                        }
-                    }
-                }
+                //            university1.Groups.Add(new Group(id, name, university1.Specialitys[specialitiesId - 1], university1.FormOfEducations[formOfEducationId - 1]));
+                //        }
+                //    }
+                //}
 
                 #endregion
 
                 #region students
 
-                sqlExpression = "SELECT * FROM Students";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var lastName = reader["LastName"].ToString();
-                            var firstName = reader["FirstName"].ToString();
-                            var middleName = reader["MiddleName"].ToString();
-                            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
-                            var groupId = int.Parse(reader["Group_id"].ToString());
-                            var tmp = new Student(id, lastName, firstName, middleName, birthDate);
-                            university1.Groups[groupId - 1].Students.Add(tmp);
-                        }
-                    }
-                }
+                //sqlExpression = "SELECT * FROM Students";
+                //command = new SqliteCommand(sqlExpression, connection);
+                //using (SqliteDataReader reader = command.ExecuteReader())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        while (reader.Read())
+                //        {
+                //            var id = int.Parse(reader["id"].ToString());
+                //            var lastName = reader["LastName"].ToString();
+                //            var firstName = reader["FirstName"].ToString();
+                //            var middleName = reader["MiddleName"].ToString();
+                //            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
+                //            var groupId = int.Parse(reader["Group_id"].ToString());
+                //            var tmp = new Student(id, lastName, firstName, middleName, birthDate);
+                //            university1.Groups[groupId - 1].Students.Add(tmp);
+                //        }
+                //    }
+                //}
 
                 #endregion
 
@@ -505,7 +516,7 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _selectedUniversity = value;
-                Groups = _selectedUniversity.Groups;
+                Groups = ado.GetAllGroup();
                 Teachers = _selectedUniversity.Teachers;
                 OnPropertyChanged();
             }
@@ -538,8 +549,8 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _selectedGroup = value;
-                GroupInfo = $"{_selectedGroup.Name} - {_selectedGroup.Name} - {_selectedGroup.Speciality.Name} - {_selectedGroup.FormOfEducation.Name}";
-                Students = _selectedGroup.Students;
+                GroupInfo = $"{_selectedGroup.Id} - {_selectedGroup.Name} - {_selectedGroup.Speciality.Name} - {_selectedGroup.FormOfEducation.Name}";
+                Students = ado.GetStudentsInGroup(_selectedGroup);
                 OnPropertyChanged();
             }
         }
@@ -588,6 +599,8 @@ namespace DatebaseCP.ViewModel
 
         #region Commands
 
+        #region CloseAppCommand
+
         private RelayCommand _closeAppCommand;
 
         public RelayCommand CloseAppCommand
@@ -600,6 +613,96 @@ namespace DatebaseCP.ViewModel
                 });
             }
         }
+
+        #endregion
+
+        #region AddGroupCommand
+
+        private RelayCommand _addGroupCommand;
+
+        public RelayCommand AddGroupCommand
+        {
+            get
+            {
+                return _addGroupCommand ??= new RelayCommand(obj =>
+                {
+                    Group newGroup = new Group();
+
+                    GroupWindow groupWindow = new GroupWindow
+                    {
+                        DataContext = new GroupWindowViewModel(newGroup),
+                        Owner = obj as Window,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+
+                    groupWindow.ShowDialog();
+
+                    if (groupWindow.DialogResult.Value)
+                    {
+                        ado.InsertGroup(newGroup);
+                        Groups = ado.GetAllGroup();
+                        SelectedGroup = Groups.First(g => g.Id == newGroup.Id);
+                    }
+                });
+            }
+        }
+
+        #endregion
+
+        #region EditGroupCommand
+
+        private RelayCommand _editGroupCommand;
+
+        public RelayCommand EditGroupCommand
+        {
+            get
+            {
+                return _editGroupCommand ??= new RelayCommand(obj =>
+                {
+                    Group updGroup = SelectedGroup;
+
+                    GroupWindow groupWindow = new GroupWindow()
+                    {
+                        DataContext = new GroupWindowViewModel(updGroup)
+                    };
+
+                    groupWindow.Owner = obj as Window;
+                    groupWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    groupWindow.ShowDialog();
+
+                    if (groupWindow.DialogResult.Value)
+                    {
+                        ado.UpdateGroup(updGroup);
+                        Groups = ado.GetAllGroup();
+                        SelectedGroup = Groups.First(g => g.Id == updGroup.Id);
+                    }
+                },
+                    obj => SelectedGroup != null);
+            }
+        }
+
+        #endregion
+
+        #region DeleteGroupCommand
+
+        private RelayCommand _deleteGroupCommand;
+
+        public RelayCommand DeleteGroupCommand
+        {
+            get
+            {
+                return _deleteGroupCommand ??= new RelayCommand(obj =>
+                {
+                    ado.DeleteGroup(SelectedGroup);
+                    Groups = ado.GetAllGroup();
+                    SelectedGroup = Groups.FirstOrDefault();
+                },
+                    obj => SelectedGroup != null);
+            }
+        }
+
+        #endregion
+
 
         #endregion
 

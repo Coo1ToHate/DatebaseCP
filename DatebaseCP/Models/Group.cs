@@ -4,6 +4,10 @@ namespace DatebaseCP.Models
 {
     internal class Group
     {
+        public Group()
+        {
+        }
+
         public Group(string name, Speciality speciality, FormOfEducation formOfEducation)
         {
             Students = new ObservableCollection<Student>();

@@ -26,6 +26,10 @@ namespace DatebaseCP.Models
         /// </summary>
         public DateTime BirthDate { get; set; }
 
+        protected Employees()
+        {
+        }
+
         protected Employees(string lastName, string firstName, string middleName, DateTime birthDate)
         {
             LastName = lastName;

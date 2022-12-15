@@ -4,6 +4,10 @@ namespace DatebaseCP.Models
 {
     internal class Student : Employees
     {
+        public Student()
+        {
+        }
+
         public Student(string lastName, string firstName, string middleName, DateTime birthDate) : base(lastName, firstName, middleName, birthDate)
         {
         }

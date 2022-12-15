@@ -2,6 +2,10 @@
 {
     internal class Speciality
     {
+        public Speciality()
+        {
+        }
+
         public Speciality(string name)
         {
             Name = name;
