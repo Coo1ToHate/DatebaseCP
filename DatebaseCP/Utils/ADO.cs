@@ -355,6 +355,25 @@ namespace DatebaseCP.Utils
             }
         }
 
+        public int CountStudentsInGroup(int id)
+        {
+            int result;
+
+            string sql = @"SELECT COUNT(*) FROM Students WHERE Group_id = @groupId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter formOfEducationIdParameter = new SqliteParameter("@groupId", id);
+                command.Parameters.Add(formOfEducationIdParameter);
+
+                result = (int)(long)command.ExecuteScalar();
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Students

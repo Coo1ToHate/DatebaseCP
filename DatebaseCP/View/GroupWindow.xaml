@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatebaseCP.View"
         mc:Ignorable="d"
-        Title="GroupWindow" Height="200" Width="400"
+        Title="{Binding Title}" Height="200" Width="400"
         ResizeMode="NoResize" Background="Beige">
     <Grid ShowGridLines="True">
         <Grid.RowDefinitions>

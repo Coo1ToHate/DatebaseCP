@@ -16,206 +16,213 @@
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="Q" Command="{Binding CloseAppCommand}"/>
     </Window.InputBindings>
-    <Grid ShowGridLines="True">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="База">
+                    <MenuItem Header="Создать"/>
+                    <MenuItem Header="Открыть"/>
+                    <Separator/>
+                    <MenuItem Header="Выход" Command="{Binding CloseAppCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Номенклатура">
+                    <MenuItem Header="Группы"/>
+                    <MenuItem Header="Студенты"/>
+                </MenuItem>
+                <MenuItem Header="Справка">
+                    <MenuItem Header="О программе"/>
+                </MenuItem>
+            </Menu>
 
-        <StackPanel Margin="5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" Grid.Row="0" Margin="3"
-                          ItemsSource="{Binding Universities}" SelectedItem="{Binding SelectedUniversity}"
-                          DisplayMemberPath="Name"/>
+            <StatusBar DockPanel.Dock="Bottom" Background="AliceBlue">
+                <StatusBarItem>
+                    <TextBlock Text="{Binding StatusBarMsg}"/>
+                </StatusBarItem>
+            </StatusBar>
+
+            <Grid ShowGridLines="True">
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="5">
+                        <TabControl>
+                            <TabItem Header="Студенты">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="5"
+                                           Content="{Binding GroupInfo}"/>
+
+                                    <StackPanel Grid.Column="0" Grid.Row="1" Margin="2, 5, 2, 0">
+                                        <Grid Height="25">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Grid.Column="0" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="Добавить группу" Command="{Binding AddGroupCommand}">
+                                                <fa:ImageAwesome Icon="Solid_Plus" PrimaryColor="Green" Margin="2"/>
+                                            </Button>
+                                            <Button Grid.Column="1" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="Редактировать группу" Command="{Binding EditGroupCommand}">
+                                                <fa:ImageAwesome Icon="Regular_PenToSquare" PrimaryColor="DimGray" Margin="2"/>
+                                            </Button>
+                                            <Button Grid.Column="2" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="Удалить группу" Command="{Binding DeleteGroupCommand}">
+                                                <fa:ImageAwesome Icon="Solid_TrashCan" PrimaryColor="Red" Margin="2"/>
+                                            </Button>
+                                            <Button Grid.Column="4" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="Информация о группе" Command="{Binding GroupReport}">
+                                                <fa:ImageAwesome Icon="Solid_ChartLine" PrimaryColor="DimGray" Margin="2"/>
+                                            </Button>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="2, 5, 2, 0">
+                                        <Grid Height="25">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Grid.Column="0" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="+"></Button>
+                                            <Button Grid.Column="1" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="+"></Button>
+                                            <Button Grid.Column="2" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="+"></Button>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <ListView Grid.Row="2" Grid.Column="0" Margin="2"
+                                              ItemsSource="{Binding Groups}"
+                                              SelectedItem="{Binding SelectedGroup}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+
+                                    </ListView>
+
+                                    <DataGrid Grid.Column="1" Grid.Row="2"
+                                              ItemsSource="{Binding Students}"
+                                              SelectedItem="{Binding SelectedStudent}"
+                                              Margin="2" BorderBrush="Blue"
+                                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                              AutoGenerateColumns="False" IsReadOnly="True"
+                                              CanUserResizeRows="False" SelectionMode="Single"
+                                              GridLinesVisibility="Vertical"
+                                              VerticalGridLinesBrush="DarkGray" AlternatingRowBackground="LightGray">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ID" Binding="{Binding Path=Id}"/>
+                                            <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
+                                            <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
+                                            <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
+                                            <DataGridTextColumn Header="info" Binding="{Binding DataContext.SelectedGroup.FormOfEducation.Name, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
+                                        </DataGrid.Columns>
+
+                                    </DataGrid>
+                                </Grid>
+
+                            </TabItem>
+                            <TabItem Header="Преподаватели">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Grid.Row="0" Margin="2, 5, 2, 0">
+                                        <Grid Height="25">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Grid.Column="0" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="+"></Button>
+                                            <Button Grid.Column="1" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="+"></Button>
+                                            <Button Grid.Column="2" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="+"></Button>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <DataGrid Grid.Column="0" Grid.Row="1"
+                                              ItemsSource="{Binding Teachers}"
+                                              SelectedItem="{Binding SelectedTeacher}"
+                                              Margin="2" BorderBrush="Blue"
+                                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                              AutoGenerateColumns="False" IsReadOnly="True"
+                                              CanUserResizeRows="False" SelectionMode="Single"
+                                              GridLinesVisibility="Vertical"
+                                              VerticalGridLinesBrush="DarkGray" AlternatingRowBackground="LightGray">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ID" Binding="{Binding Path=Id}"/>
+                                            <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
+                                            <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
+                                            <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
+                                            <DataGridTextColumn Header="Звание" Binding="{Binding Path=Title}"/>
+                                            <DataGridTextColumn Header="Ученая степень" Binding="{Binding Path=Degree}"/>
+                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </TabItem>
+                        </TabControl>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
-        </StackPanel>
-
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="5">
-                <TabControl>
-                    <TabItem Header="Студенты">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="5"
-                           Content="{Binding GroupInfo}"/>
-
-                            <StackPanel Grid.Column="0" Grid.Row="1" Margin="2, 5, 2, 0">
-                                <Grid Height="25">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Button Grid.Column="0" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+" Command="{Binding AddGroupCommand}">
-                                        <fa:ImageAwesome Icon="Solid_Plus" PrimaryColor="Green" Margin="2"/>
-                                    </Button>
-                                    <Button Grid.Column="1" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+" Command="{Binding EditGroupCommand}">
-                                        <fa:ImageAwesome Icon="Regular_PenToSquare" PrimaryColor="DimGray" Margin="2"/>
-                                    </Button>
-                                    <Button Grid.Column="2" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+" Command="{Binding DeleteGroupCommand}">
-                                        <fa:ImageAwesome Icon="Solid_TrashCan" PrimaryColor="Red" Margin="2"/>
-                                    </Button>
-                                </Grid>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1" Grid.Row="1" Margin="2, 5, 2, 0">
-                                <Grid Height="25">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Button Grid.Column="0" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+"></Button>
-                                    <Button Grid.Column="1" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+"></Button>
-                                    <Button Grid.Column="2" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+"></Button>
-                                </Grid>
-                            </StackPanel>
-
-                            <ListView Grid.Row="2" Grid.Column="0" Margin="2"
-                              ItemsSource="{Binding Groups}"
-                              SelectedItem="{Binding SelectedGroup}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"/>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-
-                            </ListView>
-
-                            <DataGrid Grid.Column="1" Grid.Row="2"
-                              ItemsSource="{Binding Students}"
-                              SelectedItem="{Binding SelectedStudent}"
-                              Margin="2" BorderBrush="Blue"
-                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                              AutoGenerateColumns="False" IsReadOnly="True"
-                              CanUserResizeRows="False" SelectionMode="Single"
-                              GridLinesVisibility="Vertical"
-                              VerticalGridLinesBrush="DarkGray" AlternatingRowBackground="LightGray">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID" Binding="{Binding Path=Id}"/>
-                                    <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
-                                    <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
-                                    <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
-                                    <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
-                                </DataGrid.Columns>
-
-                            </DataGrid>
-                        </Grid>
-
-                    </TabItem>
-                    <TabItem Header="Преподаватели">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0" Grid.Row="0" Margin="2, 5, 2, 0">
-                                <Grid Height="25">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="26"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Button Grid.Column="0" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+"></Button>
-                                    <Button Grid.Column="1" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+"></Button>
-                                    <Button Grid.Column="2" Grid.Row="0"
-                                    Margin="0, 0, 1, 0"
-                                    Background="AliceBlue"
-                                    BorderBrush="CadetBlue"
-                                    ToolTip="+"></Button>
-                                </Grid>
-                            </StackPanel>
-
-                            <DataGrid Grid.Column="0" Grid.Row="1"
-                              ItemsSource="{Binding Teachers}"
-                              SelectedItem="{Binding SelectedTeacher}"
-                              Margin="2" BorderBrush="Blue"
-                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                              AutoGenerateColumns="False" IsReadOnly="True"
-                              CanUserResizeRows="False" SelectionMode="Single"
-                              GridLinesVisibility="Vertical"
-                              VerticalGridLinesBrush="DarkGray" AlternatingRowBackground="LightGray">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID" Binding="{Binding Path=Id}"/>
-                                    <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
-                                    <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
-                                    <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
-                                    <DataGridTextColumn Header="Звание" Binding="{Binding Path=Title}"/>
-                                    <DataGridTextColumn Header="Ученая степень" Binding="{Binding Path=Degree}"/>
-                                    <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </Grid>
-                    </TabItem>
-                </TabControl>
-            </StackPanel>
-        </ScrollViewer>
-
-        <StatusBar Grid.Row="2" Background="AliceBlue">
-            <StatusBarItem>
-                <TextBlock Text="{Binding StatusBarMsg}"/>
-            </StatusBarItem>
-        </StatusBar>
+        </DockPanel>
     </Grid>
 </Window>

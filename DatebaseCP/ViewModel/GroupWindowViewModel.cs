@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using DatebaseCP.Command;
@@ -10,6 +11,7 @@ namespace DatebaseCP.ViewModel
 {
     internal class GroupWindowViewModel : BaseViewModel
     {
+        private string _title;
         private Group group;
         private string _name;
         private IEnumerable<Speciality> _speciality;
@@ -20,14 +22,26 @@ namespace DatebaseCP.ViewModel
         public GroupWindowViewModel(Group group)
         {
             this.group = group;
+            Title = "Добавление группы";
             Name = group.Name;
             ADO ado = new ADO();
             Specialities = ado.GetAllSpecialities();
             FormOfEducations = ado.GetAllFormOfEducation();
             if (Name != null)
             {
+                Title = $"Редактирование группы - {Name}";
                 SelectSpeciality = Specialities.First(s => s.Id == group.Speciality.Id);
                 SelectFormOfEducations = FormOfEducations.First(f => f.Id == group.FormOfEducation.Id);
+            }
+        }
+
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                OnPropertyChanged();
             }
         }
 

@@ -19,7 +19,6 @@ namespace DatebaseCP.ViewModel
 
         private string _title;
         private string _statusBarMsg;
-        private ObservableCollection<University> _universities;
         private University _selectedUniversity;
         private ObservableCollection<Group> _groups;
         private string _groupInfo;
@@ -476,8 +475,7 @@ namespace DatebaseCP.ViewModel
 
             #endregion
 
-            Universities = new ObservableCollection<University> { university1 };
-            SelectedUniversity = Universities.First();
+            SelectedUniversity = university1;
         }
 
         public string Title
@@ -496,16 +494,6 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _statusBarMsg = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<University> Universities
-        {
-            get => _universities;
-            set
-            {
-                _universities = value;
                 OnPropertyChanged();
             }
         }
@@ -549,7 +537,7 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _selectedGroup = value;
-                GroupInfo = $"{_selectedGroup.Id} - {_selectedGroup.Name} - {_selectedGroup.Speciality.Name} - {_selectedGroup.FormOfEducation.Name}";
+                GroupInfo = $"{_selectedGroup.Id} - {_selectedGroup.Name} - {_selectedGroup.Speciality.Name} - {_selectedGroup.FormOfEducation.Name} - {ado.CountStudentsInGroup(_selectedGroup.Id)}";
                 Students = ado.GetStudentsInGroup(_selectedGroup);
                 OnPropertyChanged();
             }
@@ -697,6 +685,34 @@ namespace DatebaseCP.ViewModel
                     Groups = ado.GetAllGroup();
                     SelectedGroup = Groups.FirstOrDefault();
                 },
+                    obj => SelectedGroup != null && ado.CountStudentsInGroup(SelectedGroup.Id) == 0);
+            }
+        }
+
+        #endregion
+
+
+        #region GroupReport
+
+        private RelayCommand _groupReport;
+
+        public RelayCommand GroupReport
+        {
+            get
+            {
+                return _groupReport ??= new RelayCommand(obj =>
+                    {
+                        Group group = SelectedGroup;
+
+                        ReportGroupWindow reportGroupWindow = new ReportGroupWindow()
+                        {
+                            DataContext = new ReportGroupWindowViewModel(group)
+                        };
+
+                        reportGroupWindow.Owner = obj as Window;
+                        reportGroupWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                        reportGroupWindow.ShowDialog();
+                    },
                     obj => SelectedGroup != null);
             }
         }
