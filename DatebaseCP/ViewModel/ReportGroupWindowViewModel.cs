@@ -1,5 +1,7 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using DatebaseCP.Command;
 using DatebaseCP.Models;
 using DatebaseCP.Utils;
 using DatebaseCP.ViewModel.Base;
@@ -97,6 +99,85 @@ namespace DatebaseCP.ViewModel
             {
                 _students = value;
                 OnPropertyChanged();
+            }
+        }
+
+        #region Commands
+
+        #region CreateReport
+
+        private RelayCommand _createReport;
+
+        public RelayCommand CreateReport
+        {
+            get
+            {
+                return _createReport ??= new RelayCommand(obj =>
+                {
+                    Create();
+                });
+            }
+        }
+
+        #endregion
+
+
+        #endregion
+
+
+        private void Create()
+        {
+            try
+            {
+                string path = "Report.html";
+
+                using (StreamWriter streamWriter = File.CreateText(path))
+                {
+                    streamWriter.WriteLine("<html>");
+                    streamWriter.WriteLine("<head>");
+                    streamWriter.WriteLine("    <title>Отчет</title>");
+                    streamWriter.WriteLine("    <meta http-equiv=\"Content-Type\" content\"text/html;charset=utf-8\" />");
+                    streamWriter.WriteLine(@"     <style type=""text/css"">
+                                                       table {
+                                                            margin-top: 5px;
+                                                            border-collapse: collapse;
+                                                            border: 1px solid #000;
+                                                            width: 80%;
+                                                        }
+                                                        thead{
+                                                            text-align: center;
+                                                        }
+                                                        td,th{
+                                                            padding: 5px;
+                                                            border: 1px solid #000;
+                                                        }
+                                                  </style>");
+                    streamWriter.WriteLine("</head>");
+                    streamWriter.WriteLine("<body>");
+                    streamWriter.WriteLine($"<H1>Отчет по группе - {Group.Name}</h1>");
+                    streamWriter.WriteLine($"<p>Специализация - {Group.Speciality.Name}");
+                    streamWriter.WriteLine($"<p>Форма обучения - {Group.FormOfEducation.Name}");
+                    streamWriter.WriteLine($"<p>Количество студентов - {CountStudents}");
+                    streamWriter.WriteLine($"<p>Средний бал - ");
+                    streamWriter.WriteLine("<table>");
+                    streamWriter.WriteLine("<tr> <td>ID</td> <td>Фамилия</td> <td>Имя</td> <td>Отчество</td> <td>Дата рождения</td>");
+                    foreach (var s in Students)
+                    {
+                        streamWriter.WriteLine($"<tr> <td>{s.Id}</td> <td>{s.LastName}</td> <td>{s.LastName}</td> <td>{s.MiddleName}</td> <td>{s.BirthDate:dd.mm.yyyy}</td>");
+                    }
+                    streamWriter.WriteLine("</table>");
+                    streamWriter.WriteLine("</body>");
+                    streamWriter.WriteLine("</html>");
+                }
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true
+                });
+            }
+            catch
+            {
             }
         }
     }
