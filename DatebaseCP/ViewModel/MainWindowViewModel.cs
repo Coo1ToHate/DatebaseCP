@@ -691,7 +691,6 @@ namespace DatebaseCP.ViewModel
 
         #endregion
 
-
         #region GroupReport
 
         private RelayCommand _groupReport;
@@ -719,7 +718,56 @@ namespace DatebaseCP.ViewModel
 
         #endregion
 
+        #region ListSpecialityCommand
 
+        private RelayCommand _listSpecialityCommand;
+
+        public RelayCommand ListSpecialityCommand
+        {
+            get
+            {
+                return _listSpecialityCommand ??= new RelayCommand(obj =>
+                {
+                    ListSpecialityWindow listSpecialityWindow = new ListSpecialityWindow()
+                    {
+                        DataContext = new ListSpecialityWindowViewModel()
+                    };
+
+                    listSpecialityWindow.Owner = obj as Window;
+                    listSpecialityWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    listSpecialityWindow.ShowDialog();
+                });
+            }
+        }
+
+        #endregion
+
+        #region ListFormOfEducationCommand
+
+        private RelayCommand _listFormOfEducationCommand;
+
+        public RelayCommand ListFormOfEducationCommand
+        {
+            get
+            {
+                return _listFormOfEducationCommand ??= new RelayCommand(obj =>
+                {
+                    ListFormOfEducationWindow listFormOfEducationWindow = new ListFormOfEducationWindow()
+                    {
+                        DataContext = new ListFormOfEducationWindowViewModel()
+                    };
+
+                    listFormOfEducationWindow.Owner = obj as Window;
+                    listFormOfEducationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    listFormOfEducationWindow.ShowDialog();
+                });
+            }
+        }
+
+        #endregion
+
+
+        
         #endregion
 
     }

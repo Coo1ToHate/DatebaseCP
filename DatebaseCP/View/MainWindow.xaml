@@ -26,8 +26,8 @@
                     <MenuItem Header="Выход" Command="{Binding CloseAppCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Номенклатура">
-                    <MenuItem Header="Группы"/>
-                    <MenuItem Header="Студенты"/>
+                    <MenuItem Header="Специальность" Command="{Binding ListSpecialityCommand}"/>
+                    <MenuItem Header="Форма обучения" Command="{Binding ListFormOfEducationCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Справка">
                     <MenuItem Header="О программе"/>
