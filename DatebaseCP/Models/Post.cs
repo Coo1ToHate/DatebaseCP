@@ -1,23 +1,18 @@
 ﻿namespace DatebaseCP.Models
 {
-    internal class TeacherDegree
+    internal class Post
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        
-        public TeacherDegree()
+
+        public Post()
         {
         }
 
-        public TeacherDegree(int id, string name)
+        public Post(int id, string name)
         {
             Id = id;
             Name = name;
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
     }
 }

@@ -104,7 +104,7 @@ namespace DatebaseCP.ViewModel
                             Owner = obj as Window,
                             WindowStartupLocation = WindowStartupLocation.CenterOwner
                         };
-                        
+
                         listSpecialityEditWindow.ShowDialog();
 
                         if (listSpecialityEditWindow.DialogResult.Value)
@@ -132,7 +132,7 @@ namespace DatebaseCP.ViewModel
                     ado.DeleteSpeciality(SelectSpeciality);
                     Specialities = ado.GetAllSpecialities();
                 },
-                    obj => SelectSpeciality != null);
+                    obj => SelectSpeciality != null && ado.CountGroupsWithSpecialities(SelectSpeciality.Id) == 0);
             }
         }
 

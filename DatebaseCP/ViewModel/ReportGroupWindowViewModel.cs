@@ -26,10 +26,10 @@ namespace DatebaseCP.ViewModel
             _title = $"Отчет о группе - {group.Name}";
             _group = group;
             _name = group.Name;
-            _speciality = group.Speciality.Name;
-            _formOfEducations = group.FormOfEducation.Name;
+            _speciality = ado.GetSpeciality(group.SpecialityID).Name;
+            _formOfEducations = ado.GetFormOfEducation(group.FormOfEducationID).Name;
             _countStudents = ado.CountStudentsInGroup(group.Id);
-            _students = ado.GetStudentsInGroup(group);
+            _students = ado.GetStudentsInGroup(group.Id);
         }
 
         public string Title
@@ -155,8 +155,8 @@ namespace DatebaseCP.ViewModel
                     streamWriter.WriteLine("</head>");
                     streamWriter.WriteLine("<body>");
                     streamWriter.WriteLine($"<H1>Отчет по группе - {Group.Name}</h1>");
-                    streamWriter.WriteLine($"<p>Специализация - {Group.Speciality.Name}");
-                    streamWriter.WriteLine($"<p>Форма обучения - {Group.FormOfEducation.Name}");
+                    streamWriter.WriteLine($"<p>Специализация - {Speciality}");
+                    streamWriter.WriteLine($"<p>Форма обучения - {FormOfEducations}");
                     streamWriter.WriteLine($"<p>Количество студентов - {CountStudents}");
                     streamWriter.WriteLine($"<p>Средний бал - ");
                     streamWriter.WriteLine("<table>");

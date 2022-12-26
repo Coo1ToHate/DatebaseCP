@@ -8,15 +8,14 @@ namespace DatebaseCP.Models
         {
         }
 
-        public Group(string name, Speciality speciality, FormOfEducation formOfEducation)
+        public Group(string name, int specialityId, int formOfEducationId)
         {
-            Students = new ObservableCollection<Student>();
             Name = name;
-            Speciality = speciality;
-            FormOfEducation = formOfEducation;
+            SpecialityID = specialityId;
+            FormOfEducationID = formOfEducationId;
         }
 
-        public Group(int id, string name, Speciality speciality, FormOfEducation formOfEducation) : this(name, speciality, formOfEducation)
+        public Group(int id, string name, int specialityId, int formOfEducationId) : this(name, specialityId, formOfEducationId)
         {
             Id = id;
         }
@@ -25,12 +24,8 @@ namespace DatebaseCP.Models
 
         public string Name { get; set; }
 
-        public Speciality Speciality { get; set; }
+        public int SpecialityID { get; set; }
 
-        public FormOfEducation FormOfEducation { get; set; }
-
-        public ObservableCollection<Student> Students { get; set; }
-
-        //public Student Groupleader { get; set; }
+        public int FormOfEducationID { get; set; }
     }
 }

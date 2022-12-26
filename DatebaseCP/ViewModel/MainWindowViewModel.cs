@@ -16,6 +16,7 @@ namespace DatebaseCP.ViewModel
     {
         private readonly string _dbFileName = "data.db";
         ADO ado = new ADO();
+        University university1 = new("ТУСУР");
 
         private string _title;
         private string _statusBarMsg;
@@ -32,8 +33,6 @@ namespace DatebaseCP.ViewModel
         {
             Title = "Универ";
             StatusBarMsg = "Готов!";
-
-            University university1 = new("ТУСУР");
 
             #region test
 
@@ -263,215 +262,10 @@ namespace DatebaseCP.ViewModel
             university1.Specialitys = ado.GetAllSpecialities();
             university1.FormOfEducations = ado.GetAllFormOfEducation();
             university1.Groups = ado.GetAllGroup();
-            foreach (var g in university1.Groups)
-            {
-                g.Students = ado.GetStudentsInGroup(g);
-            }
-
-            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
-            {
-                connection.Open();
-
-                #region speciality
-
-                string sqlExpression = "SELECT * FROM Speciality";
-                SqliteCommand command = new(sqlExpression, connection);
-                //using (SqliteDataReader reader = command.ExecuteReader())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        while (reader.Read())
-                //        {
-                //            var id = int.Parse(reader["id"].ToString());
-                //            var name = reader["Name"].ToString();
-
-                //            university1.Specialitys.Add(new Speciality(id, name));
-                //        }
-                //    }
-                //}
-
-                #endregion
-
-                #region formOfEducation
-
-                //sqlExpression = "SELECT * FROM FormOfEducation";
-                //command = new SqliteCommand(sqlExpression, connection);
-                //using (SqliteDataReader reader = command.ExecuteReader())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        while (reader.Read())
-                //        {
-                //            var id = int.Parse(reader["id"].ToString());
-                //            var name = reader["Name"].ToString();
-
-                //            university1.FormOfEducations.Add(new FormOfEducation(id, name));
-                //        }
-                //    }
-                //}
-
-                #endregion
-
-                #region groups
-
-                //sqlExpression = "SELECT * FROM Groups";
-                //command = new SqliteCommand(sqlExpression, connection);
-                //using (SqliteDataReader reader = command.ExecuteReader())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        while (reader.Read())
-                //        {
-                //            var id = int.Parse(reader["id"].ToString());
-                //            var name = reader["Name"].ToString();
-                //            var specialitiesId = int.Parse(reader["Speciality_id"].ToString());
-                //            var formOfEducationId = int.Parse(reader["FormOfEducation_id"].ToString());
-
-                //            university1.Groups.Add(new Group(id, name, university1.Specialitys[specialitiesId - 1], university1.FormOfEducations[formOfEducationId - 1]));
-                //        }
-                //    }
-                //}
-
-                #endregion
-
-                #region students
-
-                //sqlExpression = "SELECT * FROM Students";
-                //command = new SqliteCommand(sqlExpression, connection);
-                //using (SqliteDataReader reader = command.ExecuteReader())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        while (reader.Read())
-                //        {
-                //            var id = int.Parse(reader["id"].ToString());
-                //            var lastName = reader["LastName"].ToString();
-                //            var firstName = reader["FirstName"].ToString();
-                //            var middleName = reader["MiddleName"].ToString();
-                //            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
-                //            var groupId = int.Parse(reader["Group_id"].ToString());
-                //            var tmp = new Student(id, lastName, firstName, middleName, birthDate);
-                //            university1.Groups[groupId - 1].Students.Add(tmp);
-                //        }
-                //    }
-                //}
-
-                #endregion
-
-                #region teacherTitle
-
-                sqlExpression = "SELECT * FROM TeacherTitle";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var title = reader["Name"].ToString();
-
-                            university1.TeachersTitle.Add(new TeacherTitle(id, title));
-                        }
-                    }
-                }
-
-                #endregion
-
-                #region post
-
-                sqlExpression = "SELECT * FROM Post";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var name = reader["Name"].ToString();
-
-                            university1.TeacherPosts.Add(new TeacherPost(id, name));
-                        }
-                    }
-                }
-
-                #endregion
-
-                #region degree
-
-                sqlExpression = "SELECT * FROM TeacherDegree";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var name = reader["Name"].ToString();
-
-                            university1.TeachersDegree.Add(new TeacherDegree(id, name));
-                        }
-                    }
-                }
-
-                #endregion
-
-                #region teacher
-
-                sqlExpression = "SELECT * FROM Teachers";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var lastName = reader["LastName"].ToString();
-                            var firstName = reader["FirstName"].ToString();
-                            var middleName = reader["MiddleName"].ToString();
-                            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
-                            var titleId = int.Parse(reader["TeachingTitle_id"].ToString());
-                            var degreeId = int.Parse(reader["TeachingDegree_id"].ToString());
-                            var tmp = new Teacher(
-                                id,
-                                lastName,
-                                firstName,
-                                middleName,
-                                birthDate,
-                                university1.TeachersTitle.First(t => t.Id == titleId),
-                                university1.TeachersDegree.First(d => d.Id == degreeId)
-                                );
-                            university1.Teachers.Add(tmp);
-                        }
-                    }
-                }
-
-                #endregion
-
-                #region teacherPost
-
-                sqlExpression = "SELECT * FROM TeacherPost";
-                command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = int.Parse(reader["id"].ToString());
-                            var teacherID = int.Parse(reader["Teacher_id"].ToString());
-                            var postID = int.Parse(reader["Post_id"].ToString());
-                            university1.Teachers.First(t => t.Id == teacherID).Posts.Add(university1.TeacherPosts.First(p => p.Id == postID));
-                        }
-                    }
-                }
-
-                #endregion
-
-            }
+            university1.TeachersTitle = ado.GetAllTeacherTitle();
+            university1.TeachersDegree = ado.GetAllTeacherDegree();
+            university1.Posts = ado.GetAllPosts();
+            university1.Teachers = ado.GetAllTeachers();
 
             #endregion
 
@@ -537,8 +331,12 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _selectedGroup = value;
-                GroupInfo = $"{_selectedGroup.Id} - {_selectedGroup.Name} - {_selectedGroup.Speciality.Name} - {_selectedGroup.FormOfEducation.Name} - {ado.CountStudentsInGroup(_selectedGroup.Id)}";
-                Students = ado.GetStudentsInGroup(_selectedGroup);
+                GroupInfo = $"{_selectedGroup.Id} - " +
+                            $"{_selectedGroup.Name} - " +
+                            $"{university1.Specialitys.First(s => s.Id == _selectedGroup.SpecialityID).Name} - " +
+                            $"{university1.FormOfEducations.First(f => f.Id == _selectedGroup.FormOfEducationID).Name} - " +
+                            $"{ado.CountStudentsInGroup(_selectedGroup.Id)}";
+                Students = ado.GetStudentsInGroup(_selectedGroup.Id);
                 OnPropertyChanged();
             }
         }
@@ -583,7 +381,6 @@ namespace DatebaseCP.ViewModel
                 OnPropertyChanged();
             }
         }
-
 
         #region Commands
 
@@ -736,6 +533,8 @@ namespace DatebaseCP.ViewModel
                     listSpecialityWindow.Owner = obj as Window;
                     listSpecialityWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listSpecialityWindow.ShowDialog();
+
+                    university1.Specialitys = ado.GetAllSpecialities();
                 });
             }
         }
@@ -760,14 +559,180 @@ namespace DatebaseCP.ViewModel
                     listFormOfEducationWindow.Owner = obj as Window;
                     listFormOfEducationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listFormOfEducationWindow.ShowDialog();
+
+                    university1.FormOfEducations = ado.GetAllFormOfEducation();
                 });
             }
         }
 
         #endregion
 
+        #region AddStudentCommand
 
-        
+        private RelayCommand _addStudentCommand;
+
+        public RelayCommand AddStudentCommand
+        {
+            get
+            {
+                return _addStudentCommand ??= new RelayCommand(obj =>
+                {
+                    Student newStudent = new Student();
+                    newStudent.GroupId = SelectedGroup.Id;
+
+                    StudentWindow studentWindow = new StudentWindow
+                    {
+                        DataContext = new StudentWindowViewModel(newStudent),
+                        Owner = obj as Window,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+
+                    studentWindow.ShowDialog();
+
+                    if (studentWindow.DialogResult.Value)
+                    {
+                        ado.InsertStudent(newStudent);
+                        SelectedGroup = Groups.First(g => g.Id == newStudent.GroupId);
+                        SelectedStudent = Students.First(s => s.Id == newStudent.Id);
+                    }
+                });
+            }
+        }
+
+        #endregion
+
+        #region EditStudentCommand
+
+        private RelayCommand _editStudentCommand;
+
+        public RelayCommand EditStudentCommand
+        {
+            get
+            {
+                return _editStudentCommand ??= new RelayCommand(obj =>
+                {
+                    Student editStudent = SelectedStudent;
+
+                    StudentWindow studentWindow = new StudentWindow
+                    {
+                        DataContext = new StudentWindowViewModel(editStudent),
+                        Owner = obj as Window,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+
+                    studentWindow.ShowDialog();
+
+                    if (studentWindow.DialogResult.Value)
+                    {
+                        ado.UpdateStudent(editStudent);
+                        SelectedGroup = Groups.First(g => g.Id == editStudent.GroupId);
+                        SelectedStudent = Students.First(s => s.Id == editStudent.Id);
+                    }
+                },
+                    obj => SelectedStudent != null);
+            }
+        }
+
+        #endregion
+
+        #region DeleteStudentCommand
+
+        private RelayCommand _deleteStudentCommand;
+
+        public RelayCommand DeleteStudentCommand
+        {
+            get
+            {
+                return _deleteStudentCommand ??= new RelayCommand(obj =>
+                {
+                    ado.DeleteStudent(SelectedStudent);
+                    Students = ado.GetStudentsInGroup(SelectedGroup.Id);
+                    SelectedStudent = Students.FirstOrDefault();
+                },
+                    obj => SelectedStudent != null);
+            }
+        }
+
+        #endregion
+
+        #region ListPostCommand
+
+        private RelayCommand _listPostCommand;
+
+        public RelayCommand ListPostCommand
+        {
+            get
+            {
+                return _listPostCommand ??= new RelayCommand(obj =>
+                {
+                    ListPostWindow listPostWindow = new ListPostWindow()
+                    {
+                        DataContext = new ListPostWindowViewModel()
+                    };
+
+                    listPostWindow.Owner = obj as Window;
+                    listPostWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    listPostWindow.ShowDialog();
+
+                    university1.Posts = ado.GetAllPosts();
+                });
+            }
+        }
+
+        #endregion
+
+        #region ListTeacherTitleCommand
+
+        private RelayCommand _listTeacherTitleCommand;
+
+        public RelayCommand ListTeacherTitleCommand
+        {
+            get
+            {
+                return _listTeacherTitleCommand ??= new RelayCommand(obj =>
+                {
+                    ListTitleWindow listTitleWindow = new ListTitleWindow()
+                    {
+                        DataContext = new ListTitleWindowViewModel()
+                    };
+
+                    listTitleWindow.Owner = obj as Window;
+                    listTitleWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    listTitleWindow.ShowDialog();
+
+                    university1.TeachersTitle = ado.GetAllTeacherTitle();
+                });
+            }
+        }
+
+        #endregion
+
+        #region ListTeacherDegreeCommand
+
+        private RelayCommand _listTeacherDegreeCommand;
+
+        public RelayCommand ListTeacherDegreeCommand
+        {
+            get
+            {
+                return _listTeacherDegreeCommand ??= new RelayCommand(obj =>
+                {
+                    ListDegreeWindow listDegreeWindow = new ListDegreeWindow()
+                    {
+                        DataContext = new ListDegreeWindowViewModel()
+                    };
+
+                    listDegreeWindow.Owner = obj as Window;
+                    listDegreeWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    listDegreeWindow.ShowDialog();
+
+                    university1.TeachersDegree = ado.GetAllTeacherDegree();
+                });
+            }
+        }
+
+        #endregion
+
         #endregion
 
     }

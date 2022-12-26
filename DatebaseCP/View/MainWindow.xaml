@@ -28,6 +28,10 @@
                 <MenuItem Header="Номенклатура">
                     <MenuItem Header="Специальность" Command="{Binding ListSpecialityCommand}"/>
                     <MenuItem Header="Форма обучения" Command="{Binding ListFormOfEducationCommand}"/>
+                    <MenuItem Header="Должность" Command="{Binding ListPostCommand}"/>
+                    <MenuItem Header="Звание" Command="{Binding ListTeacherTitleCommand}"/>
+                    <MenuItem Header="Ученая степень" Command="{Binding ListTeacherDegreeCommand}"/>
+
                 </MenuItem>
                 <MenuItem Header="Справка">
                     <MenuItem Header="О программе"/>
@@ -114,17 +118,23 @@
                                                     Margin="0, 0, 1, 0"
                                                     Background="AliceBlue"
                                                     BorderBrush="CadetBlue"
-                                                    ToolTip="+"></Button>
+                                                    ToolTip="Добавить студента" Command="{Binding AddStudentCommand}">
+                                                <fa:ImageAwesome Icon="Solid_Plus" PrimaryColor="Green" Margin="2"/>
+                                            </Button>
                                             <Button Grid.Column="1" Grid.Row="0"
                                                     Margin="0, 0, 1, 0"
                                                     Background="AliceBlue"
                                                     BorderBrush="CadetBlue"
-                                                    ToolTip="+"></Button>
+                                                    ToolTip="Редактировать студента" Command="{Binding EditStudentCommand}">
+                                                <fa:ImageAwesome Icon="Regular_PenToSquare" PrimaryColor="DimGray" Margin="2"/>
+                                            </Button>
                                             <Button Grid.Column="2" Grid.Row="0"
                                                     Margin="0, 0, 1, 0"
                                                     Background="AliceBlue"
                                                     BorderBrush="CadetBlue"
-                                                    ToolTip="+"></Button>
+                                                    ToolTip="Удалить студента" Command="{Binding DeleteStudentCommand}">
+                                                <fa:ImageAwesome Icon="Solid_TrashCan" PrimaryColor="Red" Margin="2"/>
+                                            </Button>
                                         </Grid>
                                     </StackPanel>
 
@@ -154,7 +164,7 @@
                                             <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
                                             <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
                                             <DataGridTextColumn Header="info" Binding="{Binding DataContext.SelectedGroup.FormOfEducation.Name, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
-                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
+                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
                                         </DataGrid.Columns>
 
                                     </DataGrid>

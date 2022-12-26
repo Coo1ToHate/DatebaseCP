@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using DatebaseCP.Command;
@@ -30,8 +29,8 @@ namespace DatebaseCP.ViewModel
             if (Name != null)
             {
                 Title = $"Редактирование группы - {Name}";
-                SelectSpeciality = Specialities.First(s => s.Id == group.Speciality.Id);
-                SelectFormOfEducations = FormOfEducations.First(f => f.Id == group.FormOfEducation.Id);
+                SelectedSpeciality = Specialities.First(s => s.Id == group.SpecialityID);
+                SelectedFormOfEducations = FormOfEducations.First(f => f.Id == group.FormOfEducationID);
             }
         }
 
@@ -65,7 +64,7 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        public Speciality SelectSpeciality
+        public Speciality SelectedSpeciality
         {
             get => _selectedSpeciality;
             set
@@ -85,7 +84,7 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        public FormOfEducation SelectFormOfEducations
+        public FormOfEducation SelectedFormOfEducations
         {
             get => _selectedFormOfEducation;
             set
@@ -108,13 +107,13 @@ namespace DatebaseCP.ViewModel
                 return _saveCommand ?? (_saveCommand = new RelayCommand(obj =>
                 {
                     group.Name = Name;
-                    group.Speciality = SelectSpeciality;
-                    group.FormOfEducation = SelectFormOfEducations;
+                    group.SpecialityID = SelectedSpeciality.Id;
+                    group.FormOfEducationID = SelectedFormOfEducations.Id;
 
                     Window window = obj as Window;
                     window.DialogResult = true;
                     window.Close();
-                }, obj => !string.IsNullOrEmpty(Name) && SelectSpeciality != null && SelectFormOfEducations != null));
+                }, obj => !string.IsNullOrEmpty(Name) && SelectedSpeciality != null && SelectedFormOfEducations != null));
             }
         }
 

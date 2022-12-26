@@ -104,7 +104,7 @@ namespace DatebaseCP.ViewModel
                             Owner = obj as Window,
                             WindowStartupLocation = WindowStartupLocation.CenterOwner
                         };
-                        
+
                         listFormOfEducationEditWindow.ShowDialog();
 
                         if (listFormOfEducationEditWindow.DialogResult.Value)
@@ -119,7 +119,6 @@ namespace DatebaseCP.ViewModel
 
         #endregion
 
-        //TODO проверку на кол-во с формой обучения
         #region DeleteFormOfEducationCommand
 
         private RelayCommand _deleteFormOfEducationCommand;
@@ -133,7 +132,7 @@ namespace DatebaseCP.ViewModel
                     ado.DeleteFormOfEducation(SelectedFormOfEducation);
                     FormOfEducations = ado.GetAllFormOfEducation();
                 },
-                    obj => SelectedFormOfEducation != null);
+                    obj => SelectedFormOfEducation != null && ado.CountGroupsWithFormOfEducation(SelectedFormOfEducation.Id) == 0);
             }
         }
 

@@ -12,7 +12,7 @@ namespace DatebaseCP.Models
             Groups = new ObservableCollection<Group>();
             Teachers = new ObservableCollection<Teacher>();
             TeachersTitle = new ObservableCollection<TeacherTitle>();
-            TeacherPosts = new ObservableCollection<TeacherPost>();
+            Posts = new ObservableCollection<Post>();
             TeachersDegree = new ObservableCollection<TeacherDegree>();
         }
 
@@ -22,7 +22,7 @@ namespace DatebaseCP.Models
         public ObservableCollection<Group> Groups { get; set; }
         public ObservableCollection<Teacher> Teachers { get; set; }
         public ObservableCollection<TeacherTitle> TeachersTitle { get; set; }
-        public ObservableCollection<TeacherPost> TeacherPosts { get; set; }
+        public ObservableCollection<Post> Posts { get; set; }
         public ObservableCollection<TeacherDegree> TeachersDegree { get; set; }
 
     }

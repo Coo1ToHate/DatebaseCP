@@ -1,28 +1,28 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 
 namespace DatebaseCP.Models
 {
     internal class Teacher : Employees
     {
-        public Teacher(string lastName, string firstName, string middleName, DateTime birthDate, TeacherTitle title, TeacherDegree degree) : 
+        public Teacher()
+        {
+        }
+
+        public Teacher(string lastName, string firstName, string middleName, DateTime birthDate, int titleId, int degreeId) : 
             base(lastName, firstName, middleName, birthDate)
         {
-            Title = title;
-            Degree = degree;
-            Posts = new ObservableCollection<TeacherPost>();
+            TitleId = titleId;
+            DegreeId = degreeId;
         }
 
-        public Teacher(int id,string lastName, string firstName, string middleName, DateTime birthDate, TeacherTitle title, TeacherDegree degree) :
+        public Teacher(int id,string lastName, string firstName, string middleName, DateTime birthDate, int titleId, int degreeId) :
             base(id, lastName, firstName, middleName, birthDate)
         {
-            Title = title;
-            Degree = degree;
-            Posts = new ObservableCollection<TeacherPost>();
+            TitleId = titleId;
+            DegreeId = degreeId;
         }
 
-        public TeacherTitle Title { get; set; }
-        public ObservableCollection<TeacherPost> Posts { get; set; }
-        public TeacherDegree Degree { get; set; }
+        public int TitleId { get; set; }
+        public int DegreeId { get; set; }
     }
 }

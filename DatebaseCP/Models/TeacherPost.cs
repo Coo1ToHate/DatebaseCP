@@ -2,13 +2,13 @@
 {
     internal class TeacherPost
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int TeacherId { get; set; }
+        public int PostId { get; set; }
 
-        public TeacherPost(int id, string name)
+        public TeacherPost(int teacherId, int postId)
         {
-            Id = id;
-            Name = name;
+            TeacherId = teacherId;
+            PostId = postId;
         }
     }
 }
