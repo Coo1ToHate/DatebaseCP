@@ -4,12 +4,14 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsSelected { get; set; }
 
-        public Post()
+        public Post(bool isSelected = false)
         {
+            IsSelected = isSelected;
         }
 
-        public Post(int id, string name)
+        public Post(int id, string name, bool isSelected = false) : this(isSelected)
         {
             Id = id;
             Name = name;

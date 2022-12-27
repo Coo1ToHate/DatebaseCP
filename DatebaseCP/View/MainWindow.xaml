@@ -163,7 +163,6 @@
                                             <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
                                             <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
                                             <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
-                                            <DataGridTextColumn Header="info" Binding="{Binding DataContext.SelectedGroup.FormOfEducation.Name, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
                                             <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
                                         </DataGrid.Columns>
 
@@ -194,23 +193,29 @@
                                                     Margin="0, 0, 1, 0"
                                                     Background="AliceBlue"
                                                     BorderBrush="CadetBlue"
-                                                    ToolTip="+"></Button>
+                                                    ToolTip="Добавить преподавателя" Command="{Binding AddTeacherCommand}">
+                                                <fa:ImageAwesome Icon="Solid_Plus" PrimaryColor="Green" Margin="2"/>
+                                            </Button>
                                             <Button Grid.Column="1" Grid.Row="0"
                                                     Margin="0, 0, 1, 0"
                                                     Background="AliceBlue"
                                                     BorderBrush="CadetBlue"
-                                                    ToolTip="+"></Button>
+                                                    ToolTip="Редактировать преподавателя" Command="{Binding EditTeacherCommand}">
+                                                <fa:ImageAwesome Icon="Regular_PenToSquare" PrimaryColor="DimGray" Margin="2"/>
+                                            </Button>
                                             <Button Grid.Column="2" Grid.Row="0"
                                                     Margin="0, 0, 1, 0"
                                                     Background="AliceBlue"
                                                     BorderBrush="CadetBlue"
-                                                    ToolTip="+"></Button>
+                                                    ToolTip="Удалить преподавателя" Command="{Binding DeleteTeacherCommand}">
+                                                <fa:ImageAwesome Icon="Solid_TrashCan" PrimaryColor="Red" Margin="2"/>
+                                            </Button>
                                         </Grid>
                                     </StackPanel>
 
                                     <DataGrid Grid.Column="0" Grid.Row="1"
                                               ItemsSource="{Binding TeachersTables}"
-                                              SelectedItem="{Binding SelectedTeacher}"
+                                              SelectedItem="{Binding SelectedDataRow}"
                                               Margin="2" BorderBrush="Blue"
                                               VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                                               AutoGenerateColumns="False" IsReadOnly="True"
@@ -218,14 +223,14 @@
                                               GridLinesVisibility="Vertical"
                                               VerticalGridLinesBrush="DarkGray" AlternatingRowBackground="LightGray">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="ID" Binding="{Binding Path=Id}"/>
+                                            <DataGridTextColumn Header="ID" Binding="{Binding Path=id}"/>
                                             <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
                                             <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
                                             <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
                                             <DataGridTextColumn Header="Звание" Binding="{Binding Path=Title}"/>
                                             <DataGridTextColumn Header="Ученая степень" Binding="{Binding Path=Degree}"/>
                                             <DataGridTextColumn Header="Должность" Binding="{Binding Path=Post}"/>
-                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
+                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
                                             
                                         </DataGrid.Columns>
                                     </DataGrid>

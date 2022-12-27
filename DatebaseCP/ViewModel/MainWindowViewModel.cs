@@ -29,6 +29,7 @@ namespace DatebaseCP.ViewModel
         private Student _selectedStudent;
         private Teacher _selectedTeacher;
         private DataTable _teachersTables;
+        private DataRowView _selectedDataRow;
 
         public MainWindowViewModel()
         {
@@ -382,6 +383,16 @@ namespace DatebaseCP.ViewModel
             }
         }
 
+        public DataRowView SelectedDataRow
+        {
+            get => _selectedDataRow;
+            set
+            {
+                _selectedDataRow = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region Commands
 
         #region CloseAppCommand
@@ -728,6 +739,98 @@ namespace DatebaseCP.ViewModel
 
                     university1.TeachersDegree = ado.GetAllTeacherDegree();
                 });
+            }
+        }
+
+        #endregion
+
+        #region AddTeacherCommand
+
+        private RelayCommand _addTeacherCommand;
+
+        public RelayCommand AddTeacherCommand
+        {
+            get
+            {
+                return _addTeacherCommand ??= new RelayCommand(obj =>
+                {
+                    Teacher newTeacher = new Teacher();
+
+                    TeacherWindow teacherWindow = new TeacherWindow
+                    {
+                        DataContext = new TeacherWindowViewModel(newTeacher),
+                        Owner = obj as Window,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+
+                    teacherWindow.ShowDialog();
+
+                    if (teacherWindow.DialogResult.Value)
+                    {
+                        ado.InsertTeacher(newTeacher);
+                        ado.DeletePostsWithTeacher(newTeacher.Id);
+                        ado.InsertTeacherPosts(newTeacher.Id, newTeacher.Posts);
+
+                        TeachersTables = ado.GetAllTeachers();
+                    }
+
+                });
+            }
+        }
+
+        #endregion
+
+        #region EditTeacherCommand
+
+        private RelayCommand _editTeacherCommand;
+
+        public RelayCommand EditTeacherCommand
+        {
+            get
+            {
+                return _editTeacherCommand ??= new RelayCommand(obj =>
+                {
+                    Teacher updTeacher = ado.GetTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString()));
+
+                    TeacherWindow teacherWindow = new TeacherWindow
+                    {
+                        DataContext = new TeacherWindowViewModel(updTeacher),
+                        Owner = obj as Window,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+
+                    teacherWindow.ShowDialog();
+
+                    if (teacherWindow.DialogResult.Value)
+                    {
+                        ado.UpdateTeacher(updTeacher);
+                        ado.DeletePostsWithTeacher(updTeacher.Id);
+                        ado.InsertTeacherPosts(updTeacher.Id, updTeacher.Posts);
+
+                        TeachersTables = ado.GetAllTeachers();
+                    }
+
+                }, obj => SelectedDataRow != null);
+            }
+        }
+
+        #endregion
+
+        #region DeleteTeacherCommand
+
+        private RelayCommand _deleteTeacherCommand;
+
+        public RelayCommand DeleteTeacherCommand
+        {
+            get
+            {
+                return _deleteTeacherCommand ??= new RelayCommand(obj =>
+                {
+                    ado.DeleteTeacher(ado.GetTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString())));
+                    ado.DeletePostsWithTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString()));
+
+                    TeachersTables = ado.GetAllTeachers();
+                }, obj => SelectedDataRow != null);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DatebaseCP.Models
 {
@@ -24,5 +25,6 @@ namespace DatebaseCP.Models
 
         public int TitleId { get; set; }
         public int DegreeId { get; set; }
+        public List<Post> Posts { get; set; } = new List<Post>();
     }
 }
