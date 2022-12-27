@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using DatebaseCP.Models;
 using Microsoft.Data.Sqlite;
 
@@ -212,7 +213,7 @@ namespace DatebaseCP.Utils
 
                 SqliteParameter nameParameter = new SqliteParameter("@name", formOfEducation.Name);
                 command.Parameters.Add(nameParameter);
-                
+
                 var id = (long)command.ExecuteScalar();
                 formOfEducation.Id = (int)id;
             }
@@ -266,7 +267,7 @@ namespace DatebaseCP.Utils
 
             return result;
         }
-        
+
         #endregion
 
         #region Groups
@@ -374,7 +375,7 @@ namespace DatebaseCP.Utils
                 SqliteParameter formOfEducationIdParameter =
                     new SqliteParameter("@formOfEducation_id", group.FormOfEducationID);
                 command.Parameters.Add(formOfEducationIdParameter);
-                
+
                 command.ExecuteNonQuery();
             }
         }
@@ -558,7 +559,7 @@ namespace DatebaseCP.Utils
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
-                SqliteCommand command = new(sql, connection);       
+                SqliteCommand command = new(sql, connection);
 
                 SqliteParameter idParameter = new SqliteParameter("@id", student.Id);
                 command.Parameters.Add(idParameter);
@@ -991,38 +992,61 @@ namespace DatebaseCP.Utils
 
         #region Teacher
 
-        public ObservableCollection<Teacher> GetAllTeachers()
+        public DataTable GetAllTeachers()
         {
-            ObservableCollection<Teacher> result = new ObservableCollection<Teacher>();
+            string sql = @"SELECT
+                                t.id,
+                                t.LastName,
+                                t.FirstName,
+                                t.MiddleName,
+                                t.BirthDate,
+                                tt.Name as 'Title',
+                                td.Name as 'Degree',
+                                group_concat(p.name, ', ') as 'Post'
+                            FROM Teachers t 
+                            INNER JOIN TeacherTitle tt
+                                ON t.TeachingTitle_id = tt.id
+                            INNER JOIN TeacherDegree td
+                                ON t.TeachingDegree_id = td.id
+                            INNER JOIN (TeacherPost tp INNER JOIN Post p ON tp.Post_id=p.id) 
+                                ON t.id = tp.Teacher_id
+                            GROUP BY t.id";
 
-            string sql = @"SELECT * FROM Teachers";
+            var myTable = new DataTable();
+            myTable.Columns.Add("id", typeof(int));
+            myTable.Columns.Add("LastName", typeof(string));
+            myTable.Columns.Add("FirstName", typeof(string));
+            myTable.Columns.Add("MiddleName", typeof(string));
+            myTable.Columns.Add("BirthDate", typeof(DateTime));
+            myTable.Columns.Add("Title", typeof(string));
+            myTable.Columns.Add("Degree", typeof(string));
+            myTable.Columns.Add("Post", typeof(string));
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
                 SqliteCommand command = new(sql, connection);
-
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            var id = int.Parse(reader["id"].ToString());
-                            var lastName = reader["LastName"].ToString();
-                            var firstName = reader["FirstName"].ToString();
-                            var middleName = reader["MiddleName"].ToString();
-                            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
-                            var titleId = int.Parse(reader["TeachingTitle_id"].ToString());
-                            var degreeId = int.Parse(reader["TeachingDegree_id"].ToString());
-
-                            result.Add(new Teacher(id, lastName, firstName, middleName, birthDate, titleId, degreeId));
+                            myTable.Rows.Add(
+                                int.Parse(reader["id"].ToString()),
+                                reader["LastName"].ToString(),
+                                reader["FirstName"].ToString(),
+                                reader["MiddleName"].ToString(),
+                                DateTime.Parse(reader["BirthDate"].ToString()),
+                                reader["Title"].ToString(),
+                                reader["Degree"].ToString(),
+                                reader["Post"].ToString()
+                            );
                         }
                     }
                 }
             }
-
-            return result;
+            return myTable;
         }
 
         public Teacher GetTeacher(int id)

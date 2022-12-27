@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -26,8 +27,8 @@ namespace DatebaseCP.ViewModel
         private Group _selectedGroup;
         private ObservableCollection<Student> _students;
         private Student _selectedStudent;
-        private ObservableCollection<Teacher> _teachers;
         private Teacher _selectedTeacher;
+        private DataTable _teachersTables;
 
         public MainWindowViewModel()
         {
@@ -265,7 +266,7 @@ namespace DatebaseCP.ViewModel
             university1.TeachersTitle = ado.GetAllTeacherTitle();
             university1.TeachersDegree = ado.GetAllTeacherDegree();
             university1.Posts = ado.GetAllPosts();
-            university1.Teachers = ado.GetAllTeachers();
+            university1.TeachersTable = ado.GetAllTeachers();
 
             #endregion
 
@@ -299,7 +300,7 @@ namespace DatebaseCP.ViewModel
             {
                 _selectedUniversity = value;
                 Groups = ado.GetAllGroup();
-                Teachers = _selectedUniversity.Teachers;
+                TeachersTables = _selectedUniversity.TeachersTable;
                 OnPropertyChanged();
             }
         }
@@ -347,7 +348,6 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _students = value;
-                //SelectedStudent = students.First();
                 OnPropertyChanged();
             }
         }
@@ -362,22 +362,22 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        public ObservableCollection<Teacher> Teachers
-        {
-            get => _teachers;
-            set
-            {
-                _teachers = value;
-                OnPropertyChanged();
-            }
-        }
-
         public Teacher SelectedTeacher
         {
             get => _selectedTeacher;
             set
             {
                 _selectedTeacher = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DataTable TeachersTables
+        {
+            get => _teachersTables;
+            set
+            {
+                _teachersTables = value;
                 OnPropertyChanged();
             }
         }

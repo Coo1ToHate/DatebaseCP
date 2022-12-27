@@ -209,7 +209,7 @@
                                     </StackPanel>
 
                                     <DataGrid Grid.Column="0" Grid.Row="1"
-                                              ItemsSource="{Binding Teachers}"
+                                              ItemsSource="{Binding TeachersTables}"
                                               SelectedItem="{Binding SelectedTeacher}"
                                               Margin="2" BorderBrush="Blue"
                                               VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
@@ -224,7 +224,9 @@
                                             <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
                                             <DataGridTextColumn Header="Звание" Binding="{Binding Path=Title}"/>
                                             <DataGridTextColumn Header="Ученая степень" Binding="{Binding Path=Degree}"/>
+                                            <DataGridTextColumn Header="Должность" Binding="{Binding Path=Post}"/>
                                             <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
+                                            
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Grid>
