@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using DatebaseCP.Command;
@@ -8,30 +9,30 @@ using DatebaseCP.ViewModel.Base;
 
 namespace DatebaseCP.ViewModel
 {
-    internal class ReportGroupWindowViewModel : BaseViewModel
+    internal class ReportStudentWindowViewModel : BaseViewModel
     {
         private ADO ado = new ADO();
-
         private string _title;
-
-        private Group _group;
-        private string _name;
-        private string _speciality;
-        private string _formOfEducations;
-        private int _countStudents;
-        private ObservableCollection<Student> _students;
+        private Student _student;
+        private string _lastName;
+        private string _firstName;
+        private string _middleName;
+        private DateTime _bDate;
+        private string _group;
         private double _score;
+        private DataTable _diarysTables;
 
-        public ReportGroupWindowViewModel(Group group)
+        public ReportStudentWindowViewModel(Student student)
         {
-            _title = $"Отчет о группе - {group.Name}";
-            _group = group;
-            _name = group.Name;
-            _speciality = ado.GetSpeciality(group.SpecialityID).Name;
-            _formOfEducations = ado.GetFormOfEducation(group.FormOfEducationID).Name;
-            _countStudents = ado.CountStudentsInGroup(group.Id);
-            _students = ado.GetStudentsInGroup(group.Id);
-            _score = ado.ScoreGroup(group.Id);
+            _title = $"Отчет о студенте - {student.LastName} {student.FirstName}";
+            _student = student;
+            _lastName = student.LastName;
+            _firstName = student.FirstName;
+            _middleName = student.MiddleName;
+            _bDate = student.BirthDate;
+            _group = ado.GetGroup(student.GroupId).Name;
+            _score = ado.ScoreStudent(student.Id);
+            _diarysTables = ado.GetAllDiaresForStudent(student.Id);
         }
 
         public string Title
@@ -44,62 +45,60 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        public Group Group
+        public Student Student
+        {
+            get => _student;
+            set
+            {
+                _student = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string LastName
+        {
+            get => _lastName;
+            set
+            {
+                _lastName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string FirstName
+        {
+            get => _firstName;
+            set
+            {
+                _firstName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string MiddleName
+        {
+            get => _middleName;
+            set {
+                _middleName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime BDate
+        {
+            get => _bDate;
+            set
+            {
+                _bDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Group
         {
             get => _group;
-            set
-            {
+            set {
                 _group = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Speciality
-        {
-            get => _speciality;
-            set
-            {
-                _speciality = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string FormOfEducations
-        {
-            get => _formOfEducations;
-            set
-            {
-                _formOfEducations = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int CountStudents
-        {
-            get => _countStudents;
-            set
-            {
-                _countStudents = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<Student> Students
-        {
-            get => _students;
-            set
-            {
-                _students = value;
                 OnPropertyChanged();
             }
         }
@@ -114,7 +113,17 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        #region Commands
+        public DataTable DiarysTables
+        {
+            get => _diarysTables;
+            set
+            {
+                _diarysTables = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #region Command
 
         #region CreateReportCommand
 
@@ -133,9 +142,7 @@ namespace DatebaseCP.ViewModel
 
         #endregion
 
-
         #endregion
-
 
         private void Create()
         {
@@ -166,16 +173,33 @@ namespace DatebaseCP.ViewModel
                                                   </style>");
                     streamWriter.WriteLine("</head>");
                     streamWriter.WriteLine("<body>");
-                    streamWriter.WriteLine($"<H1>Отчет по группе - {Group.Name}</h1>");
-                    streamWriter.WriteLine($"<p>Специализация - {Speciality}");
-                    streamWriter.WriteLine($"<p>Форма обучения - {FormOfEducations}");
-                    streamWriter.WriteLine($"<p>Количество студентов - {CountStudents}");
+                    streamWriter.WriteLine($"<H1>Отчет по студенте - {Student.LastName} {Student.FirstName}</h1>");
+                    streamWriter.WriteLine($"<p>Фамилия - {Student.LastName}");
+                    streamWriter.WriteLine($"<p>Имя - {Student.FirstName}");
+                    streamWriter.WriteLine($"<p>Отчество - {Student.MiddleName}");
+                    streamWriter.WriteLine($"<p>Дата рождения - {Student.BirthDate:dd.mm.yyyy}");
+                    streamWriter.WriteLine($"<p>Группа - {Group}");
                     streamWriter.WriteLine($"<p>Средний бал - {Score:F2}");
                     streamWriter.WriteLine("<table>");
-                    streamWriter.WriteLine("<tr> <td>ID</td> <td>Фамилия</td> <td>Имя</td> <td>Отчество</td> <td>Дата рождения</td>");
-                    foreach (var s in Students)
+                    streamWriter.WriteLine("<tr> <td>ID</td> <td>Дата</td> <td>Предмет</td> <td>Аттестация</td> <td>Оценка</td> <td>Преподаватель</td>");
+                    foreach (DataRow r in DiarysTables.Rows)
                     {
-                        streamWriter.WriteLine($"<tr> <td>{s.Id}</td> <td>{s.LastName}</td> <td>{s.LastName}</td> <td>{s.MiddleName}</td> <td>{s.BirthDate:dd.mm.yyyy}</td>");
+                        streamWriter.WriteLine("<tr> ");
+                        for (int i = 0; i < r.ItemArray.Length; i++)
+                        {
+                            if (i != 5)
+                            {
+                                if (i == 1)
+                                {
+                                    streamWriter.WriteLine($"<td>{r[i]:dd.mm.yyyy}</td>");
+                                }
+                                else
+                                {
+                                    streamWriter.WriteLine($"<td>{r[i]}</td>");
+                                }
+                            }
+                        }
+                        streamWriter.WriteLine("</td>");
                     }
                     streamWriter.WriteLine("</table>");
                     streamWriter.WriteLine("</body>");
@@ -192,5 +216,6 @@ namespace DatebaseCP.ViewModel
             {
             }
         }
+
     }
 }

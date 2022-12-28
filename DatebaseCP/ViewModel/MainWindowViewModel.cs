@@ -327,7 +327,7 @@ namespace DatebaseCP.ViewModel
             university1.TeachersTitle = ado.GetAllTeacherTitle();
             university1.TeachersDegree = ado.GetAllTeacherDegree();
             university1.Posts = ado.GetAllPosts();
-            university1.TeachersTable = ado.GetAllTeachers();
+            university1.TeachersTable = ado.GetAllTeachersTable();
 
             #endregion
 
@@ -831,7 +831,7 @@ namespace DatebaseCP.ViewModel
                         ado.DeletePostsWithTeacher(newTeacher.Id);
                         ado.InsertTeacherPosts(newTeacher.Id, newTeacher.Posts);
 
-                        TeachersTables = ado.GetAllTeachers();
+                        TeachersTables = ado.GetAllTeachersTable();
                     }
 
                 });
@@ -867,7 +867,7 @@ namespace DatebaseCP.ViewModel
                         ado.DeletePostsWithTeacher(updTeacher.Id);
                         ado.InsertTeacherPosts(updTeacher.Id, updTeacher.Posts);
 
-                        TeachersTables = ado.GetAllTeachers();
+                        TeachersTables = ado.GetAllTeachersTable();
                     }
 
                 }, obj => SelectedDataRow != null);
@@ -889,7 +889,7 @@ namespace DatebaseCP.ViewModel
                     ado.DeleteTeacher(ado.GetTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString())));
                     ado.DeletePostsWithTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString()));
 
-                    TeachersTables = ado.GetAllTeachers();
+                    TeachersTables = ado.GetAllTeachersTable();
                 }, obj => SelectedDataRow != null);
             }
         }
@@ -943,6 +943,56 @@ namespace DatebaseCP.ViewModel
 
                     university1.TypeCertification = ado.GetAllTypeCertifications();
                 });
+            }
+        }
+
+        #endregion
+
+        #region DiaryCommand
+
+        private RelayCommand _diaryCommand;
+
+        public RelayCommand DiaryCommand
+        {
+            get
+            {
+                return _diaryCommand ??= new RelayCommand(obj =>
+                {
+                    DiaryWindow diaryWindow = new DiaryWindow()
+                    {
+                        DataContext = new DiaryWindowViewModel(SelectedStudent)
+                    };
+
+                    diaryWindow.Owner = obj as Window;
+                    diaryWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    diaryWindow.ShowDialog();
+
+                }, obj => SelectedStudent != null);
+            }
+        }
+
+        #endregion
+
+        #region StudentReportCommand
+
+        private RelayCommand _studentReportCommand;
+
+        public RelayCommand StudentReportCommand
+        {
+            get
+            {
+                return _studentReportCommand ??= new RelayCommand(obj =>
+                {
+                    ReportStudentWindow reportStudentWindow = new ReportStudentWindow()
+                    {
+                        DataContext = new ReportStudentWindowViewModel(SelectedStudent)
+                    };
+
+                    reportStudentWindow.Owner = obj as Window;
+                    reportStudentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    reportStudentWindow.ShowDialog();
+
+                }, obj => SelectedStudent != null);
             }
         }
 

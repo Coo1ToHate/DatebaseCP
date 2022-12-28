@@ -662,7 +662,7 @@ namespace DatebaseCP.Utils
 
             return result;
         }
-        
+
         public Post GetPost(int id)
         {
             Post result = new Post();
@@ -742,7 +742,7 @@ namespace DatebaseCP.Utils
                 command.ExecuteNonQuery();
             }
         }
-        
+
         #endregion
 
         #region TeacherPost
@@ -1102,7 +1102,7 @@ namespace DatebaseCP.Utils
 
         #region Teacher
 
-        public DataTable GetAllTeachers()
+        public DataTable GetAllTeachersTable()
         {
             string sql = @"SELECT
                                 t.id,
@@ -1157,6 +1157,41 @@ namespace DatebaseCP.Utils
                 }
             }
             return myTable;
+        }
+
+        public ObservableCollection<Teacher> GetAllTeachers()
+        {
+            ObservableCollection<Teacher> result = new ObservableCollection<Teacher>();
+
+            string sql = @"SELECT * FROM Teachers";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var lastName = reader["LastName"].ToString();
+                            var firstName = reader["FirstName"].ToString();
+                            var middleName = reader["MiddleName"].ToString();
+                            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
+                            var titleId = int.Parse(reader["TeachingTitle_id"].ToString());
+                            var degreeId = int.Parse(reader["TeachingDegree_id"].ToString());
+
+                            result.Add(new Teacher(id, lastName, firstName, middleName, birthDate, titleId, degreeId));
+                        }
+                    }
+                }
+            }
+
+            return result;
+
         }
 
         public Teacher GetTeacher(int id)
@@ -1459,6 +1494,231 @@ namespace DatebaseCP.Utils
                 command.Parameters.Add(idParameter);
 
                 result = (int)(long)command.ExecuteScalar();
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region Diary
+
+        public DataTable GetAllDiaresForStudent(int id)
+        {
+            string sql = @"SELECT
+                                d.id,
+                                d.Date,
+                                l.Name as Lesson,
+                                tc.Name as Type,
+                                d.Score,
+                                t.id as TeacherId,
+                                t.LastName || ' ' || t.FirstName AS Teacher
+                        FROM Diary d 
+                        INNER JOIN Lessons l
+                            ON d.Lesson_id = l.id
+                        INNER JOIN TypesCertification tc
+                            ON d.Type_id = tc.id
+                        INNER JOIN Teachers t
+                            ON d.Teacher_id = t.id
+                        WHERE d.Student_id = @studentId";
+
+            var myTable = new DataTable();
+            myTable.Columns.Add("id", typeof(int));
+            myTable.Columns.Add("Date", typeof(DateTime));
+            myTable.Columns.Add("Lesson", typeof(string));
+            myTable.Columns.Add("Type", typeof(string));
+            myTable.Columns.Add("Score", typeof(int));
+            myTable.Columns.Add("TeacherId", typeof(int));
+            myTable.Columns.Add("TeacherName", typeof(string));
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@studentId", id);
+                command.Parameters.Add(idParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            myTable.Rows.Add(
+                                int.Parse(reader["id"].ToString()),
+                                DateTime.Parse(reader["Date"].ToString()),
+                                reader["Lesson"].ToString(),
+                                reader["Type"].ToString(),
+                                int.Parse(reader["Score"].ToString()),
+                                int.Parse(reader["TeacherId"].ToString()),
+                                reader["Teacher"].ToString()
+                            );
+                        }
+                    }
+                }
+            }
+            return myTable;
+        }
+
+        public Diary GetDiary(int id)
+        {
+            Diary result = new Diary();
+
+            string sql = @"SELECT * FROM Diary WHERE id = @diaryId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@diaryId", id);
+                command.Parameters.Add(idParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var studentId = int.Parse(reader["Student_id"].ToString());
+                            var teacherId = int.Parse(reader["Teacher_id"].ToString());
+                            var date = DateTime.Parse(reader["Date"].ToString());
+                            var score = int.Parse(reader["Score"].ToString());
+                            var lessonId = int.Parse(reader["Lesson_id"].ToString());
+                            var typeId = int.Parse(reader["Type_id"].ToString());
+
+                            result.Id = id;
+                            result.StudentId = studentId;
+                            result.TeacherId = teacherId;
+                            result.Date = date;
+                            result.Score = score;
+                            result.LessonId = lessonId;
+                            result.TypeId = typeId;
+                        }
+                    }
+
+                }
+            }
+
+
+            return result;
+        }
+
+        public void InsertDiary(Diary diary)
+        {
+            string sql =
+                @"INSERT INTO Diary (Student_id, Teacher_id, Date, Score, Lesson_id, Type_id) VALUES (@studentId, @teacherId, @date, @score, @lessonId, @typeId); SELECT last_insert_rowid();";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+
+                SqliteParameter studentIdParameter = new SqliteParameter("@studentId", diary.StudentId);
+                command.Parameters.Add(studentIdParameter);
+                SqliteParameter teacherIdParameter = new SqliteParameter("@teacherId", diary.TeacherId);
+                command.Parameters.Add(teacherIdParameter);
+                SqliteParameter dateParameter = new SqliteParameter("@date", diary.Date);
+                command.Parameters.Add(dateParameter);
+                SqliteParameter scoreParameter = new SqliteParameter("@score", diary.Score);
+                command.Parameters.Add(scoreParameter);
+                SqliteParameter lessonIdId = new SqliteParameter("@lessonId", diary.LessonId);
+                command.Parameters.Add(lessonIdId);
+                SqliteParameter typeIdId = new SqliteParameter("@typeId", diary.TypeId);
+                command.Parameters.Add(typeIdId);
+
+                var id = (long)command.ExecuteScalar();
+                diary.Id = (int)id;
+            }
+        }
+
+        public void UpdateDiary(Diary diary)
+        {
+            string sql =
+                @"UPDATE Diary SET Student_id = @studentId, Teacher_id = @teacherId, Date = @date, Score = @score, Lesson_id = @lessonId, Type_id = @typeId WHERE id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+
+                SqliteParameter idParameter = new SqliteParameter("@id", diary.Id);
+                command.Parameters.Add(idParameter);
+                SqliteParameter studentIdParameter = new SqliteParameter("@studentId", diary.StudentId);
+                command.Parameters.Add(studentIdParameter);
+                SqliteParameter teacherIdParameter = new SqliteParameter("@teacherId", diary.TeacherId);
+                command.Parameters.Add(teacherIdParameter);
+                SqliteParameter dateParameter = new SqliteParameter("@date", diary.Date);
+                command.Parameters.Add(dateParameter);
+                SqliteParameter scoreParameter = new SqliteParameter("@score", diary.Score);
+                command.Parameters.Add(scoreParameter);
+                SqliteParameter lessonIdId = new SqliteParameter("@lessonId", diary.LessonId);
+                command.Parameters.Add(lessonIdId);
+                SqliteParameter typeIdId = new SqliteParameter("@typeId", diary.TypeId);
+                command.Parameters.Add(typeIdId);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteDiary(Diary diary)
+        {
+            string sql = @"DELETE FROM Diary WHERE id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@id", diary.Id);
+                command.Parameters.Add(idParameter);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public double ScoreStudent(int id)
+        {
+            double result = 0;
+
+            string sql = @"SELECT avg(Score) FROM Diary WHERE Student_id = @id";
+
+            try
+            {
+                using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+                {
+                    connection.Open();
+                    SqliteCommand command = new(sql, connection);
+                    SqliteParameter idParameter = new SqliteParameter("@id", id);
+                    command.Parameters.Add(idParameter);
+
+                    result = (double)command.ExecuteScalar();
+                }
+            }
+            catch
+            {
+            }
+
+            return result;
+        }
+
+        public double ScoreGroup(int id)
+        {
+            double result = 0;
+
+            string sql = @"SELECT avg(d.Score) FROM Diary d INNER JOIN Students s ON d.Student_id = s.Id WHERE s.Group_id = @id";
+
+            try
+            {
+                using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+                {
+                    connection.Open();
+                    SqliteCommand command = new(sql, connection);
+                    SqliteParameter idParameter = new SqliteParameter("@id", id);
+                    command.Parameters.Add(idParameter);
+
+                    result = (double)command.ExecuteScalar();
+                }
+            }
+            catch
+            {
             }
 
             return result;
