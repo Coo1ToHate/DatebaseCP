@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using DatebaseCP.Command;
 using DatebaseCP.View;
 using System.Windows;
-using System.Windows.Media;
 
 namespace DatebaseCP.ViewModel
 {

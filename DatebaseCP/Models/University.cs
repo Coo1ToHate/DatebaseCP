@@ -15,6 +15,8 @@ namespace DatebaseCP.Models
             Posts = new ObservableCollection<Post>();
             TeachersDegree = new ObservableCollection<TeacherDegree>();
             TeachersTable = new DataTable();
+            Lessons = new ObservableCollection<Lesson>();
+            TypeCertification = new ObservableCollection<TypeCertification>();
         }
 
         public string Name { get; set; }
@@ -25,6 +27,8 @@ namespace DatebaseCP.Models
         public ObservableCollection<Post> Posts { get; set; }
         public ObservableCollection<TeacherDegree> TeachersDegree { get; set; }
         public DataTable TeachersTable { get; set; }
+        public ObservableCollection<Lesson> Lessons { get; set; }
+        public ObservableCollection<TypeCertification> TypeCertification { get; set; }
 
     }
 }

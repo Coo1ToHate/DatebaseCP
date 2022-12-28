@@ -254,6 +254,66 @@ namespace DatebaseCP.ViewModel
 
                     #endregion
 
+                    #region diary
+
+                    command.CommandText = "CREATE TABLE Lessons(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO Lessons (Name) VALUES";
+                    max = 3;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += $" ('Предмет_{i + 1}')";
+                        }
+                        else
+                        {
+                            commandStr += $" ('Предмет_{i + 1}'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = "CREATE TABLE TypesCertification(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO TypesCertification (Name) VALUES";
+                    max = 2;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += " ('Лабораторная работа')";
+                        }
+                        else
+                        {
+                            commandStr += " ('Контрольная работа'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = "CREATE TABLE Diary(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Student_id INTEGER NOT NULL, Teacher_id INTEGER NOT NULL, Date TEXT NOT NULL, Score INTEGER NOT NULL, Lesson_id INTEGER NOT NULL, Type_id INTEGER NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    commandStr = "INSERT INTO Diary (Student_id, Teacher_id, Date, Score, Lesson_id, Type_id) VALUES";
+                    max = 4;
+                    for (int i = 0; i < max; i++)
+                    {
+                        if (i == max - 1)
+                        {
+                            commandStr += $" ('{i + 1}', '{i + 1}', '{DateTime.Now.AddDays(-i)}', '{i + 1}', '{i - 1}', '{i % 2 + 1}')";
+                        }
+                        else
+                        {
+                            commandStr += $" ('{i + 1}', '{i + 1}', '{DateTime.Now.AddDays(-i)}', '{i + 1}', '{i + 1}', '{i % 2 + 1}'),";
+                        }
+                    }
+                    command.CommandText = commandStr;
+                    command.ExecuteNonQuery();
+
+                    #endregion
                 }
             }
 
@@ -836,7 +896,58 @@ namespace DatebaseCP.ViewModel
 
         #endregion
 
+        #region ListLessonsCommand
+
+        private RelayCommand _listLessonsCommand;
+
+        public RelayCommand ListLessonsCommand
+        {
+            get
+            {
+                return _listLessonsCommand ??= new RelayCommand(obj =>
+                {
+                    ListLessonsWindow listLessonsWindow = new ListLessonsWindow()
+                    {
+                        DataContext = new ListLessonsWindowViewModel()
+                    };
+
+                    listLessonsWindow.Owner = obj as Window;
+                    listLessonsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    listLessonsWindow.ShowDialog();
+
+                    university1.Lessons = ado.GetAllLessons();
+                });
+            }
+        }
+
         #endregion
 
+        #region ListTypeCertificationCommand
+
+        private RelayCommand _listTypeCertificationCommand;
+
+        public RelayCommand ListTypeCertificationCommand
+        {
+            get
+            {
+                return _listTypeCertificationCommand ??= new RelayCommand(obj =>
+                {
+                    ListTypesCertificationWindow listTypesCertificationWindow = new ListTypesCertificationWindow()
+                    {
+                        DataContext = new ListTypesCertificationWindowViewModel()
+                    };
+
+                    listTypesCertificationWindow.Owner = obj as Window;
+                    listTypesCertificationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    listTypesCertificationWindow.ShowDialog();
+
+                    university1.TypeCertification = ado.GetAllTypeCertifications();
+                });
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

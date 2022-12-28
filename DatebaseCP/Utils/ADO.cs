@@ -1272,6 +1272,198 @@ namespace DatebaseCP.Utils
 
         #endregion
 
+        #region Lesson
 
+        public ObservableCollection<Lesson> GetAllLessons()
+        {
+            string sql = "SELECT * FROM Lessons";
+
+            ObservableCollection<Lesson> result = new ObservableCollection<Lesson>();
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var name = reader["Name"].ToString();
+
+                            result.Add(new Lesson(id, name));
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        public void InsertLesson(Lesson lesson)
+        {
+            string sql = @"INSERT INTO Lessons (Name) VALUES (@name); SELECT last_insert_rowid();";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+
+                SqliteParameter nameParameter = new SqliteParameter("@name", lesson.Name);
+                command.Parameters.Add(nameParameter);
+
+                var id = (long)command.ExecuteScalar();
+                lesson.Id = (int)id;
+            }
+        }
+
+        public void UpdateLesson(Lesson lesson)
+        {
+            string sql = @"UPDATE Lessons SET Name = @name WHERE id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@id", lesson.Id);
+                command.Parameters.Add(idParameter);
+                SqliteParameter nameParameter = new SqliteParameter("@name", lesson.Name);
+                command.Parameters.Add(nameParameter);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteLesson(Lesson lesson)
+        {
+            string sql = @"DELETE FROM Lessons WHERE id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@id", lesson.Id);
+                command.Parameters.Add(idParameter);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public int CountLesson(int id)
+        {
+            int result;
+
+            string sql = @"SELECT COUNT(*) FROM Diary WHERE Lesson_id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@id", id);
+                command.Parameters.Add(idParameter);
+
+                result = (int)(long)command.ExecuteScalar();
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region TypesCertification
+
+        public ObservableCollection<TypeCertification> GetAllTypeCertifications()
+        {
+            string sql = "SELECT * FROM TypesCertification";
+
+            ObservableCollection<TypeCertification> result = new ObservableCollection<TypeCertification>();
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var name = reader["Name"].ToString();
+
+                            result.Add(new TypeCertification(id, name));
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        public void InsertTypeCertification(TypeCertification typeCertification)
+        {
+            string sql = @"INSERT INTO TypesCertification (Name) VALUES (@name); SELECT last_insert_rowid();";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+
+                SqliteParameter nameParameter = new SqliteParameter("@name", typeCertification.Name);
+                command.Parameters.Add(nameParameter);
+
+                var id = (long)command.ExecuteScalar();
+                typeCertification.Id = (int)id;
+            }
+        }
+
+        public void UpdateTypeCertification(TypeCertification typeCertification)
+        {
+            string sql = @"UPDATE TypesCertification SET Name = @name WHERE id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@id", typeCertification.Id);
+                command.Parameters.Add(idParameter);
+                SqliteParameter nameParameter = new SqliteParameter("@name", typeCertification.Name);
+                command.Parameters.Add(nameParameter);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteTypeCertification(TypeCertification typeCertification)
+        {
+            string sql = @"DELETE FROM TypesCertification WHERE id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@id", typeCertification.Id);
+                command.Parameters.Add(idParameter);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public int CountTypeCertification(int id)
+        {
+            int result;
+
+            string sql = @"SELECT COUNT(*) FROM Diary WHERE Type_id = @id";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@id", id);
+                command.Parameters.Add(idParameter);
+
+                result = (int)(long)command.ExecuteScalar();
+            }
+
+            return result;
+        }
+
+        #endregion
     }
 }

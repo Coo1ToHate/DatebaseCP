@@ -31,6 +31,8 @@
                     <MenuItem Header="Должность" Command="{Binding ListPostCommand}"/>
                     <MenuItem Header="Звание" Command="{Binding ListTeacherTitleCommand}"/>
                     <MenuItem Header="Ученая степень" Command="{Binding ListTeacherDegreeCommand}"/>
+                    <MenuItem Header="Предметы" Command="{Binding ListLessonsCommand}"/>
+                    <MenuItem Header="Аттестации" Command="{Binding ListTypeCertificationCommand}"/>
 
                 </MenuItem>
                 <MenuItem Header="Справка">
