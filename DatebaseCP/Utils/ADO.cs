@@ -834,6 +834,24 @@ namespace DatebaseCP.Utils
             }
         }
 
+        public void InsertTeacherPost(TeacherPost teacherPost)
+        {
+            string sql = @"INSERT INTO TeacherPost (Teacher_id, Post_id) VALUES (@teacher_id, @post_id)";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter teacher_id = new SqliteParameter("@teacher_id", teacherPost.TeacherId);
+                command.Parameters.Add(teacher_id);
+                SqliteParameter post_id = new SqliteParameter("@post_id", teacherPost.PostId);
+                command.Parameters.Add(post_id);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
         #endregion
 
         #region Degree

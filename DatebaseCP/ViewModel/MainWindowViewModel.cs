@@ -51,44 +51,12 @@ namespace DatebaseCP.ViewModel
 
                     command.CommandText = "CREATE TABLE Students(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT NOT NULL, BirthDate TEXT, Group_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
-
-                    string commandStr = "INSERT INTO Students (LastName, FirstName, MiddleName, BirthDate, Group_id) VALUES";
-                    int max = 9;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Фамилия_{i + 1}', 'Имя_{i + 1}', 'Отчество_{i + 1}', '{DateTime.Now.AddYears(-18 - i).AddMonths(-i).AddDays(-new Random().Next(1, 28))}', '{i % 2 + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Фамилия_{i + 1}', 'Имя_{i + 1}', 'Отчество_{i + 1}', '{DateTime.Now.AddYears(-18 - i).AddMonths(-i).AddDays(-new Random().Next(1, 28))}', '{i % 2 + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
-                    command.ExecuteNonQuery();
-
+                    
                     #endregion
 
                     #region speciality
 
                     command.CommandText = "CREATE TABLE Speciality(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
-                    command.ExecuteNonQuery();
-
-                    commandStr = "INSERT INTO Speciality (Name) VALUES";
-                    max = 2;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Специальность_{i + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Специальность_{i + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
                     command.ExecuteNonQuery();
 
                     #endregion
@@ -98,43 +66,11 @@ namespace DatebaseCP.ViewModel
                     command.CommandText = "CREATE TABLE FormOfEducation(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
                     command.ExecuteNonQuery();
 
-                    commandStr = "INSERT INTO FormOfEducation (Name) VALUES";
-                    max = 2;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Форма_обучения_{i + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Форма_обучения_{i + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
-                    command.ExecuteNonQuery();
-
                     #endregion
 
                     #region groups
 
                     command.CommandText = "CREATE TABLE Groups(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Speciality_id INTEGER NOT NULL, FormOfEducation_id INTEGER NOT NULL)";
-                    command.ExecuteNonQuery();
-
-                    commandStr = "INSERT INTO Groups (Name, Speciality_id, FormOfEducation_id) VALUES";
-                    max = 2;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Группа_{i + 1}', '{i % 2 + 1}', '{i % 2 + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Группа_{i + 1}', '{i % 2 + 1}', '{i % 2 + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
                     command.ExecuteNonQuery();
 
                     #endregion
@@ -144,43 +80,11 @@ namespace DatebaseCP.ViewModel
                     command.CommandText = "CREATE TABLE Teachers(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT NOT NULL, BirthDate TEXT, TeachingTitle_id INTEGER NOT NULL, TeachingDegree_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
 
-                    commandStr = "INSERT INTO Teachers (LastName, FirstName, MiddleName, BirthDate, TeachingTitle_id, TeachingDegree_id) VALUES";
-                    max = 4;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Фамилия_{i + 1}', 'Имя_{i + 1}', 'Отчество_{i + 1}', '{DateTime.Now.AddYears(-25 - i).AddMonths(-i).AddDays(-new Random().Next(1, 28))}', '{i % 2 + 1}', '{i % 2 + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Фамилия_{i + 1}', 'Имя_{i + 1}', 'Отчество_{i + 1}', '{DateTime.Now.AddYears(-25 - i).AddMonths(-i).AddDays(-new Random().Next(1, 28))}', '{i % 2 + 1}', '{i % 2 + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
-                    command.ExecuteNonQuery();
-
                     #endregion
 
                     #region teacherTitle
 
                     command.CommandText = "CREATE TABLE TeacherTitle(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
-                    command.ExecuteNonQuery();
-
-                    commandStr = "INSERT INTO TeacherTitle (Name) VALUES";
-                    max = 2;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Звание_{i + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Звание_{i + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
                     command.ExecuteNonQuery();
 
                     #endregion
@@ -190,43 +94,11 @@ namespace DatebaseCP.ViewModel
                     command.CommandText = "CREATE TABLE Post(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
                     command.ExecuteNonQuery();
 
-                    commandStr = "INSERT INTO Post (Name) VALUES";
-                    max = 6;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Должность_{i + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Должность_{i + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
-                    command.ExecuteNonQuery();
-
                     #endregion
 
                     #region teacherPost
 
                     command.CommandText = "CREATE TABLE TeacherPost(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Teacher_id INTEGER NOT NULL, Post_id INTEGER NOT NULL)";
-                    command.ExecuteNonQuery();
-
-                    commandStr = "INSERT INTO TeacherPost (Teacher_id, Post_id) VALUES";
-                    max = 4;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('{i + 1}', '{i + 1}'), ('{i + 1}', '{i + 2}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('{i + 1}', '{i + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
                     command.ExecuteNonQuery();
 
                     #endregion
@@ -236,22 +108,6 @@ namespace DatebaseCP.ViewModel
                     command.CommandText = "CREATE TABLE TeacherDegree(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
                     command.ExecuteNonQuery();
 
-                    commandStr = "INSERT INTO TeacherDegree (Name) VALUES";
-                    max = 2;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Ученая_степень_{i + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Ученая_степень_{i + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
-                    command.ExecuteNonQuery();
-
                     #endregion
 
                     #region diary
@@ -259,61 +115,15 @@ namespace DatebaseCP.ViewModel
                     command.CommandText = "CREATE TABLE Lessons(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
                     command.ExecuteNonQuery();
 
-                    commandStr = "INSERT INTO Lessons (Name) VALUES";
-                    max = 3;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('Предмет_{i + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('Предмет_{i + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
-                    command.ExecuteNonQuery();
-
                     command.CommandText = "CREATE TABLE TypesCertification(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
-                    command.ExecuteNonQuery();
-
-                    commandStr = "INSERT INTO TypesCertification (Name) VALUES";
-                    max = 2;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += " ('Лабораторная работа')";
-                        }
-                        else
-                        {
-                            commandStr += " ('Контрольная работа'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
                     command.ExecuteNonQuery();
 
                     command.CommandText = "CREATE TABLE Diary(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Student_id INTEGER NOT NULL, Teacher_id INTEGER NOT NULL, Date TEXT NOT NULL, Score INTEGER NOT NULL, Lesson_id INTEGER NOT NULL, Type_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
 
-                    commandStr = "INSERT INTO Diary (Student_id, Teacher_id, Date, Score, Lesson_id, Type_id) VALUES";
-                    max = 4;
-                    for (int i = 0; i < max; i++)
-                    {
-                        if (i == max - 1)
-                        {
-                            commandStr += $" ('{i + 1}', '{i + 1}', '{DateTime.Now.AddDays(-i)}', '{i + 1}', '{i - 1}', '{i % 2 + 1}')";
-                        }
-                        else
-                        {
-                            commandStr += $" ('{i + 1}', '{i + 1}', '{DateTime.Now.AddDays(-i)}', '{i + 1}', '{i + 1}', '{i % 2 + 1}'),";
-                        }
-                    }
-                    command.CommandText = commandStr;
-                    command.ExecuteNonQuery();
-
                     #endregion
+
+                    //InitDemoDb();
                 }
             }
 
@@ -321,12 +131,7 @@ namespace DatebaseCP.ViewModel
 
             #region LoadData
 
-            university1.Specialitys = ado.GetAllSpecialities();
-            university1.FormOfEducations = ado.GetAllFormOfEducation();
             university1.Groups = ado.GetAllGroup();
-            university1.TeachersTitle = ado.GetAllTeacherTitle();
-            university1.TeachersDegree = ado.GetAllTeacherDegree();
-            university1.Posts = ado.GetAllPosts();
             university1.TeachersTable = ado.GetAllTeachersTable();
 
             #endregion
@@ -372,7 +177,7 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _groups = value;
-                SelectedGroup = _groups.First();
+                SelectedGroup = _groups.FirstOrDefault();
                 OnPropertyChanged();
             }
         }
@@ -393,12 +198,14 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _selectedGroup = value;
-                GroupInfo = $"{_selectedGroup.Id} - " +
-                            $"{_selectedGroup.Name} - " +
-                            $"{university1.Specialitys.First(s => s.Id == _selectedGroup.SpecialityID).Name} - " +
-                            $"{university1.FormOfEducations.First(f => f.Id == _selectedGroup.FormOfEducationID).Name} - " +
-                            $"{ado.CountStudentsInGroup(_selectedGroup.Id)}";
-                Students = ado.GetStudentsInGroup(_selectedGroup.Id);
+                if (_selectedGroup != null)
+                {
+                    GroupInfo = $"{_selectedGroup.Name} - " +
+                                $"{ado.GetSpeciality(_selectedGroup.SpecialityID).Name} - " +
+                                $"{ado.GetFormOfEducation(_selectedGroup.FormOfEducationID).Name} - " +
+                                $"{ado.CountStudentsInGroup(_selectedGroup.Id)}";
+                    Students = ado.GetStudentsInGroup(_selectedGroup.Id);
+                }
                 OnPropertyChanged();
             }
         }
@@ -604,8 +411,6 @@ namespace DatebaseCP.ViewModel
                     listSpecialityWindow.Owner = obj as Window;
                     listSpecialityWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listSpecialityWindow.ShowDialog();
-
-                    university1.Specialitys = ado.GetAllSpecialities();
                 });
             }
         }
@@ -630,8 +435,6 @@ namespace DatebaseCP.ViewModel
                     listFormOfEducationWindow.Owner = obj as Window;
                     listFormOfEducationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listFormOfEducationWindow.ShowDialog();
-
-                    university1.FormOfEducations = ado.GetAllFormOfEducation();
                 });
             }
         }
@@ -666,7 +469,7 @@ namespace DatebaseCP.ViewModel
                         SelectedGroup = Groups.First(g => g.Id == newStudent.GroupId);
                         SelectedStudent = Students.First(s => s.Id == newStudent.Id);
                     }
-                });
+                }, obj => SelectedGroup != null);
             }
         }
 
@@ -744,8 +547,6 @@ namespace DatebaseCP.ViewModel
                     listPostWindow.Owner = obj as Window;
                     listPostWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listPostWindow.ShowDialog();
-
-                    university1.Posts = ado.GetAllPosts();
                 });
             }
         }
@@ -770,8 +571,6 @@ namespace DatebaseCP.ViewModel
                     listTitleWindow.Owner = obj as Window;
                     listTitleWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listTitleWindow.ShowDialog();
-
-                    university1.TeachersTitle = ado.GetAllTeacherTitle();
                 });
             }
         }
@@ -796,8 +595,6 @@ namespace DatebaseCP.ViewModel
                     listDegreeWindow.Owner = obj as Window;
                     listDegreeWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listDegreeWindow.ShowDialog();
-
-                    university1.TeachersDegree = ado.GetAllTeacherDegree();
                 });
             }
         }
@@ -833,7 +630,6 @@ namespace DatebaseCP.ViewModel
 
                         TeachersTables = ado.GetAllTeachersTable();
                     }
-
                 });
             }
         }
@@ -914,8 +710,6 @@ namespace DatebaseCP.ViewModel
                     listLessonsWindow.Owner = obj as Window;
                     listLessonsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listLessonsWindow.ShowDialog();
-
-                    university1.Lessons = ado.GetAllLessons();
                 });
             }
         }
@@ -940,8 +734,6 @@ namespace DatebaseCP.ViewModel
                     listTypesCertificationWindow.Owner = obj as Window;
                     listTypesCertificationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     listTypesCertificationWindow.ShowDialog();
-
-                    university1.TypeCertification = ado.GetAllTypeCertifications();
                 });
             }
         }
@@ -999,5 +791,106 @@ namespace DatebaseCP.ViewModel
         #endregion
 
         #endregion
+
+        private void InitDemoDb()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                Student tmp = new Student
+                {
+                    LastName = $"Фамилия_{i + 1}",
+                    FirstName = $"Имя_{i + 1}",
+                    MiddleName = $"Отчество_{i + 1}",
+                    BirthDate = DateTime.Now.AddYears(-17 - i).AddDays(-10 * i),
+                    GroupId = i % 2 + 1
+                };
+                ado.InsertStudent(tmp);
+
+                Diary tmp2 = new Diary
+                {
+                    StudentId = i + 1,
+                    TeacherId = i / 5 + 1,
+                    Date = DateTime.Now.AddDays(-10 * (20 - i)),
+                    Score = i / 5 + 1,
+                    LessonId = i / 5 + 1,
+                    TypeId = i % 2 + 1
+                };
+                ado.InsertDiary(tmp2);
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                Speciality tmp = new Speciality
+                {
+                    Name = $"Специализация_{i + 1}"
+                };
+                ado.InsertSpeciality(tmp);
+
+                FormOfEducation tmp2 = new FormOfEducation
+                {
+                    Name = $"Форма обучения {i + 1}"
+                };
+                ado.InsertFormOfEducation(tmp2);
+
+                Group tmp3 = new Group
+                {
+                    Name = $"Группа_{i + 1}",
+                    SpecialityID = i % 2 + 1,
+                    FormOfEducationID = i % 2 + 1
+                };
+                ado.InsertGroup(tmp3);
+
+                TeacherTitle tmp4 = new TeacherTitle
+                {
+                    Name = $"Звание_{i + 1}"
+                };
+                ado.InsertTeacherTitle(tmp4);
+
+                TeacherDegree tmp5 = new TeacherDegree
+                {
+                    Name = $"Ученая_степень_{i + 1}"
+                };
+                ado.InsertTeacherDegree(tmp5);
+
+                TypeCertification tmp6 = new TypeCertification
+                {
+                    Name = $"Вид работы {i + 1}"
+                };
+                ado.InsertTypeCertification(tmp6);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                Teacher tmp = new Teacher
+                {
+                    LastName = $"Фамилия_{i + 1}",
+                    FirstName = $"Имя_{i + 1}",
+                    MiddleName = $"Отчество_{i + 1}",
+                    BirthDate = DateTime.Now.AddYears(-42 - i).AddDays(-10 * i),
+                    TitleId = i % 2 + 1,
+                    DegreeId = i % 2 + 1
+                };
+                ado.InsertTeacher(tmp);
+
+                Post tmp2 = new Post
+                {
+                    Name = $"Должность_{i + 1}"
+                };
+                ado.InsertPost(tmp2);
+
+                TeacherPost tmp3 = new TeacherPost
+                {
+                    TeacherId = i + 1,
+                    PostId = i + 1
+                };
+                ado.InsertTeacherPost(tmp3);
+
+                Lesson tmp4 = new Lesson
+                {
+                    Name = $"Предмет_{i + 1}"
+                };
+                ado.InsertLesson(tmp4);
+            }
+        }
     }
 }

@@ -20,9 +20,6 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="База">
-                    <MenuItem Header="Создать"/>
-                    <MenuItem Header="Открыть"/>
-                    <Separator/>
                     <MenuItem Header="Выход" Command="{Binding CloseAppCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Номенклатура">
@@ -33,7 +30,6 @@
                     <MenuItem Header="Ученая степень" Command="{Binding ListTeacherDegreeCommand}"/>
                     <MenuItem Header="Предметы" Command="{Binding ListLessonsCommand}"/>
                     <MenuItem Header="Аттестации" Command="{Binding ListTypeCertificationCommand}"/>
-
                 </MenuItem>
                 <MenuItem Header="Справка">
                     <MenuItem Header="О программе"/>

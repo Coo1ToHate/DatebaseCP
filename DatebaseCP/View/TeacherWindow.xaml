@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatebaseCP.Utils"
-        Title="{Binding Title}" Height="370" Width="400"
+        Title="{Binding Title}" Height="380" Width="400"
         ResizeMode="NoResize" Background="Beige">
     <Window.Resources>
         <Style TargetType="{x:Type ListBoxItem}">
