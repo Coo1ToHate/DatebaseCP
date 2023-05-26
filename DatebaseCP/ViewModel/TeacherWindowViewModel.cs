@@ -20,17 +20,18 @@ namespace DatebaseCP.ViewModel
         private DateTime _birthDate;
         private IEnumerable<TeacherTitle> _teacherTitles;
         private TeacherTitle _selectedTeacherTitle;
-        private IEnumerable<TeacherDegree> _teacherDegrees;
-        private TeacherDegree _selectedTeacherDegree;
+        private ObservableCollection<Degree> _allDegrees;
         private ObservableCollection<Post> _allPosts;
+        private ObservableCollection<Lesson> _allLessons;
 
         public TeacherWindowViewModel(Teacher teacher)
         {
             ADO ado = new ADO();
             _teacher = teacher;
             _teacherTitles = ado.GetAllTeacherTitle();
-            _teacherDegrees = ado.GetAllTeacherDegree();
+            _allDegrees = ado.GetAllDegrees();
             _allPosts = ado.GetAllPosts();
+            _allLessons = ado.GetAllLessons();
             Title = "Добавление преподавателя";
             _firstName = teacher.FirstName;
             _lastName = teacher.LastName;
@@ -42,8 +43,9 @@ namespace DatebaseCP.ViewModel
                 Title = $"Редактирование преподавателя - {FirstName} {LastName}";
                 _birthDate = teacher.BirthDate;
                 _selectedTeacherTitle = TeacherTitles.First(t => t.Id == teacher.TitleId);
-                _selectedTeacherDegree = TeacherDegrees.First(d => d.Id == teacher.DegreeId);
-                _allPosts = ado.GetAllPostsForTeacher(teacher.Id);
+                _allDegrees = ado.GetAllDegreesForTeacherEdit(teacher.Id);
+                _allPosts = ado.GetAllPostsForTeacherEdit(teacher.Id);
+                _allLessons = ado.GetAllLessonsForTeacherEdit(teacher.Id);
             }
         }
 
@@ -117,22 +119,12 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        public IEnumerable<TeacherDegree> TeacherDegrees
+        public ObservableCollection<Degree> AllDegrees
         {
-            get => _teacherDegrees;
+            get => _allDegrees;
             set
             {
-                _teacherDegrees = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public TeacherDegree SelectedTeacherDegree
-        {
-            get => _selectedTeacherDegree;
-            set
-            {
-                _selectedTeacherDegree = value;
+                _allDegrees = value;
                 OnPropertyChanged();
             }
         }
@@ -143,6 +135,16 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _allPosts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<Lesson> AllLessons
+        {
+            get => _allLessons;
+            set
+            {
+                _allLessons = value;
                 OnPropertyChanged();
             }
         }
@@ -164,8 +166,9 @@ namespace DatebaseCP.ViewModel
                     _teacher.MiddleName = MiddleName;
                     _teacher.BirthDate = BirthDate;
                     _teacher.TitleId = SelectedTeacherTitle.Id;
-                    _teacher.DegreeId = SelectedTeacherDegree.Id;
+                    _teacher.Degrees = AllDegrees.Where(d => d.IsSelected).ToList();
                     _teacher.Posts = AllPosts.Where(p => p.IsSelected).ToList();
+                    _teacher.Lessons = AllLessons.Where(l => l.IsSelected).ToList();
 
                     Window window = obj as Window;
                     window.DialogResult = true;
@@ -175,8 +178,9 @@ namespace DatebaseCP.ViewModel
                         !string.IsNullOrEmpty(FirstName) &&
                         !string.IsNullOrEmpty(LastName) &&
                         SelectedTeacherTitle != null &&
-                        SelectedTeacherDegree != null && 
-                        AllPosts.Any(p => p.IsSelected));
+                        AllDegrees.Any(d => d.IsSelected) &&
+                        AllPosts.Any(p => p.IsSelected) &&
+                        AllLessons.Any(l => l.IsSelected));
             }
         }
 

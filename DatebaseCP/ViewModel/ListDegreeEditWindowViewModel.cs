@@ -8,10 +8,10 @@ namespace DatebaseCP.ViewModel
     class ListDegreeEditWindowViewModel : BaseViewModel
     {
         private string _title;
-        private TeacherDegree _degree;
+        private Degree _degree;
         private string _name;
 
-        public ListDegreeEditWindowViewModel(TeacherDegree degree)
+        public ListDegreeEditWindowViewModel(Degree degree)
         {
             _title = "Добавление ученой степени";
             _degree = degree;

@@ -11,27 +11,27 @@ namespace DatebaseCP.ViewModel
     internal class ReportGroupWindowViewModel : BaseViewModel
     {
         private ADO ado = new ADO();
-
         private string _title;
-
         private Group _group;
-        private string _name;
         private string _speciality;
         private string _formOfEducations;
         private int _countStudents;
         private ObservableCollection<Student> _students;
         private double _score;
+        private Teacher _curator;
+        private string _curatorName;
 
         public ReportGroupWindowViewModel(Group group)
         {
-            _title = $"Отчет о группе - {group.Name}";
-            _group = group;
-            _name = group.Name;
-            _speciality = ado.GetSpeciality(group.SpecialityID).Name;
-            _formOfEducations = ado.GetFormOfEducation(group.FormOfEducationID).Name;
-            _countStudents = ado.CountStudentsInGroup(group.Id);
-            _students = ado.GetStudentsInGroup(group.Id);
-            _score = ado.ScoreGroup(group.Id);
+            Title = $"Отчет о группе - {group.Name}";
+            Group = group;
+            Speciality = ado.GetSpeciality(group.SpecialityId).Name;
+            FormOfEducations = ado.GetFormOfEducation(group.FormOfEducationId).Name;
+            CountStudents = ado.CountStudentsInGroup(group.Id);
+            Students = ado.GetStudentsInGroup(group.Id);
+            Score = ado.ScoreGroup(group.Id);
+            _curator = ado.GetTeacher(group.CuratorId);
+            CuratorName = $"{_curator.LastName} {_curator.FirstName} {_curator.MiddleName}";
         }
 
         public string Title
@@ -50,16 +50,6 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _group = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
                 OnPropertyChanged();
             }
         }
@@ -110,6 +100,16 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _score = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CuratorName
+        {
+            get => _curatorName;
+            set
+            {
+                _curatorName = value;
                 OnPropertyChanged();
             }
         }
@@ -170,12 +170,13 @@ namespace DatebaseCP.ViewModel
                     streamWriter.WriteLine($"<p>Специализация - {Speciality}");
                     streamWriter.WriteLine($"<p>Форма обучения - {FormOfEducations}");
                     streamWriter.WriteLine($"<p>Количество студентов - {CountStudents}");
+                    streamWriter.WriteLine($"<p>Куратор - {CuratorName}");
                     streamWriter.WriteLine($"<p>Средний бал - {Score:F2}");
                     streamWriter.WriteLine("<table>");
                     streamWriter.WriteLine("<tr> <td>ID</td> <td>Фамилия</td> <td>Имя</td> <td>Отчество</td> <td>Дата рождения</td>");
                     foreach (var s in Students)
                     {
-                        streamWriter.WriteLine($"<tr> <td>{s.Id}</td> <td>{s.LastName}</td> <td>{s.LastName}</td> <td>{s.MiddleName}</td> <td>{s.BirthDate:dd.mm.yyyy}</td>");
+                        streamWriter.WriteLine($"<tr> <td>{s.Id}</td> <td>{s.LastName}</td> <td>{s.LastName}</td> <td>{s.MiddleName}</td> <td>{s.BirthDate:dd.MM.yyyy}</td>");
                     }
                     streamWriter.WriteLine("</table>");
                     streamWriter.WriteLine("</body>");

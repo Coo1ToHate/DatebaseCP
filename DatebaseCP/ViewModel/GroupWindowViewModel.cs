@@ -17,20 +17,24 @@ namespace DatebaseCP.ViewModel
         private Speciality _selectedSpeciality;
         private IEnumerable<FormOfEducation> _formOfEducations;
         private FormOfEducation _selectedFormOfEducation;
+        private IEnumerable<Teacher> _curators;
+        private Teacher _selectedCurator;
 
         public GroupWindowViewModel(Group group)
         {
+            ADO ado = new ADO();
             this.group = group;
             Title = "Добавление группы";
             Name = group.Name;
-            ADO ado = new ADO();
             Specialities = ado.GetAllSpecialities();
             FormOfEducations = ado.GetAllFormOfEducation();
+            Curators = ado.GetAllTeachers();
             if (Name != null)
             {
                 Title = $"Редактирование группы - {Name}";
-                SelectedSpeciality = Specialities.First(s => s.Id == group.SpecialityID);
-                SelectedFormOfEducations = FormOfEducations.First(f => f.Id == group.FormOfEducationID);
+                SelectedSpeciality = Specialities.First(s => s.Id == group.SpecialityId);
+                SelectedFormOfEducations = FormOfEducations.First(f => f.Id == group.FormOfEducationId);
+                SelectedCurator = Curators.First(c => c.Id == group.CuratorId);
             }
         }
 
@@ -94,6 +98,26 @@ namespace DatebaseCP.ViewModel
             }
         }
 
+        public IEnumerable<Teacher> Curators
+        {
+            get => _curators;
+            set
+            {
+                _curators = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Teacher SelectedCurator
+        {
+            get => _selectedCurator;
+            set
+            {
+                _selectedCurator = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region Command
         
         #region saveCommand
@@ -107,8 +131,9 @@ namespace DatebaseCP.ViewModel
                 return _saveCommand ?? (_saveCommand = new RelayCommand(obj =>
                 {
                     group.Name = Name;
-                    group.SpecialityID = SelectedSpeciality.Id;
-                    group.FormOfEducationID = SelectedFormOfEducations.Id;
+                    group.SpecialityId = SelectedSpeciality.Id;
+                    group.FormOfEducationId = SelectedFormOfEducations.Id;
+                    group.CuratorId = SelectedCurator.Id;
 
                     Window window = obj as Window;
                     window.DialogResult = true;

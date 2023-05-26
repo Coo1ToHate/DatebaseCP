@@ -294,8 +294,9 @@ namespace DatebaseCP.Utils
                             var name = reader["Name"].ToString();
                             var specialitiesId = int.Parse(reader["Speciality_id"].ToString());
                             var formOfEducationId = int.Parse(reader["FormOfEducation_id"].ToString());
+                            var curatorId = int.Parse(reader["Curator_id"].ToString());
 
-                            result.Add(new Group(id, name, specialitiesId, formOfEducationId));
+                            result.Add(new Group(id, name, specialitiesId, formOfEducationId, curatorId));
                         }
                     }
                 }
@@ -325,11 +326,13 @@ namespace DatebaseCP.Utils
                             var name = reader["Name"].ToString();
                             var specialitiesId = int.Parse(reader["Speciality_id"].ToString());
                             var formOfEducationId = int.Parse(reader["FormOfEducation_id"].ToString());
+                            var curatorId = int.Parse(reader["Curator_id"].ToString());
 
                             result.Id = id;
                             result.Name = name;
-                            result.SpecialityID = specialitiesId;
-                            result.FormOfEducationID = formOfEducationId;
+                            result.SpecialityId = specialitiesId;
+                            result.FormOfEducationId = formOfEducationId;
+                            result.CuratorId = curatorId;
                         }
                     }
                 }
@@ -340,7 +343,7 @@ namespace DatebaseCP.Utils
 
         public void InsertGroup(Group group)
         {
-            string sql = @"INSERT INTO Groups (Name, Speciality_id, FormOfEducation_id) VALUES (@name, @speciality_id, @formOfEducation_id); SELECT last_insert_rowid();";
+            string sql = @"INSERT INTO Groups (Name, Speciality_id, FormOfEducation_id, Curator_id) VALUES (@name, @speciality_id, @formOfEducation_id, @curator_id); SELECT last_insert_rowid();";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
@@ -349,11 +352,14 @@ namespace DatebaseCP.Utils
 
                 SqliteParameter nameParameter = new SqliteParameter("@name", group.Name);
                 command.Parameters.Add(nameParameter);
-                SqliteParameter specialityIdParameter = new SqliteParameter("@speciality_id", group.SpecialityID);
+                SqliteParameter specialityIdParameter = new SqliteParameter("@speciality_id", group.SpecialityId);
                 command.Parameters.Add(specialityIdParameter);
                 SqliteParameter formOfEducationIdParameter =
-                    new SqliteParameter("@formOfEducation_id", group.FormOfEducationID);
+                    new SqliteParameter("@formOfEducation_id", group.FormOfEducationId);
                 command.Parameters.Add(formOfEducationIdParameter);
+                SqliteParameter curatorIdParameter = new SqliteParameter("@curator_id", group.CuratorId);
+                command.Parameters.Add(curatorIdParameter);
+
 
                 var id = (long)command.ExecuteScalar();
                 group.Id = (int)id;
@@ -362,7 +368,7 @@ namespace DatebaseCP.Utils
 
         public void UpdateGroup(Group group)
         {
-            string sql = @"UPDATE Groups SET Name = @name, Speciality_id = @speciality_id, FormOfEducation_id = @formOfEducation_id WHERE id = @id";
+            string sql = @"UPDATE Groups SET Name = @name, Speciality_id = @speciality_id, FormOfEducation_id = @formOfEducation_id, Curator_id = @curator_id WHERE id = @id";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
@@ -372,11 +378,13 @@ namespace DatebaseCP.Utils
                 command.Parameters.Add(idParameter);
                 SqliteParameter nameParameter = new SqliteParameter("@name", group.Name);
                 command.Parameters.Add(nameParameter);
-                SqliteParameter specialityIdParameter = new SqliteParameter("@speciality_id", group.SpecialityID);
+                SqliteParameter specialityIdParameter = new SqliteParameter("@speciality_id", group.SpecialityId);
                 command.Parameters.Add(specialityIdParameter);
                 SqliteParameter formOfEducationIdParameter =
-                    new SqliteParameter("@formOfEducation_id", group.FormOfEducationID);
+                    new SqliteParameter("@formOfEducation_id", group.FormOfEducationId);
                 command.Parameters.Add(formOfEducationIdParameter);
+                SqliteParameter curatorIdParameter = new SqliteParameter("@curator_id", group.CuratorId);
+                command.Parameters.Add(curatorIdParameter);
 
                 command.ExecuteNonQuery();
             }
@@ -419,7 +427,6 @@ namespace DatebaseCP.Utils
 
         #region Students
 
-        //TODO
         public ObservableCollection<Student> GetAllStudents()
         {
 
@@ -444,8 +451,9 @@ namespace DatebaseCP.Utils
                             var middleName = reader["MiddleName"].ToString();
                             var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
                             var groupId = int.Parse(reader["Group_id"].ToString());
+                            var recordBook = reader["RecordBook"].ToString();
 
-                            result.Add(new Student(id, lastName, firstName, middleName, birthDate, groupId));
+                            result.Add(new Student(id, lastName, firstName, middleName, birthDate, groupId, recordBook));
                         }
                     }
                 }
@@ -480,8 +488,10 @@ namespace DatebaseCP.Utils
                             var middleName = reader["MiddleName"].ToString();
                             var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
                             groupId = int.Parse(reader["Group_id"].ToString());
+                            var recordBook = reader["RecordBook"].ToString();
 
-                            result.Add(new Student(id, lastName, firstName, middleName, birthDate, groupId));
+
+                            result.Add(new Student(id, lastName, firstName, middleName, birthDate, groupId, recordBook));
                         }
                     }
                 }
@@ -513,6 +523,7 @@ namespace DatebaseCP.Utils
                             var middleName = reader["MiddleName"].ToString();
                             var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
                             var groupId = int.Parse(reader["Group_id"].ToString());
+                            var recordBook = reader["RecordBook"].ToString();
 
                             result.Id = id;
                             result.LastName = lastName;
@@ -520,6 +531,7 @@ namespace DatebaseCP.Utils
                             result.MiddleName = middleName;
                             result.BirthDate = birthDate;
                             result.GroupId = groupId;
+                            result.RecordBook = recordBook;
                         }
                     }
                 }
@@ -530,7 +542,7 @@ namespace DatebaseCP.Utils
         public void InsertStudent(Student student)
         {
             string sql =
-                @"INSERT INTO Students (LastName, FirstName, MiddleName, BirthDate, Group_id) VALUES (@lastName, @firstName, @middleName, @birthDate, @groupId); SELECT last_insert_rowid();";
+                @"INSERT INTO Students (LastName, FirstName, MiddleName, BirthDate, Group_id, RecordBook) VALUES (@lastName, @firstName, @middleName, @birthDate, @groupId, @recordBook); SELECT last_insert_rowid();";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
@@ -547,6 +559,8 @@ namespace DatebaseCP.Utils
                 command.Parameters.Add(birthDateParameter);
                 SqliteParameter groupIdParameter = new SqliteParameter("@groupId", student.GroupId);
                 command.Parameters.Add(groupIdParameter);
+                SqliteParameter recordBookParameter = new SqliteParameter("@recordBook", student.RecordBook);
+                command.Parameters.Add(recordBookParameter);
 
                 var id = (long)command.ExecuteScalar();
                 student.Id = (int)id;
@@ -556,7 +570,7 @@ namespace DatebaseCP.Utils
         public void UpdateStudent(Student student)
         {
             string sql =
-                @"UPDATE Students SET LastName = @lastName, FirstName = @firstName, MiddleName = @middleName, BirthDate = @birthDate, Group_id = @groupId WHERE id = @id";
+                @"UPDATE Students SET LastName = @lastName, FirstName = @firstName, MiddleName = @middleName, BirthDate = @birthDate, Group_id = @groupId, RecordBook = @recordBook WHERE id = @id";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
@@ -575,6 +589,8 @@ namespace DatebaseCP.Utils
                 command.Parameters.Add(birthDateParameter);
                 SqliteParameter groupIdParameter = new SqliteParameter("@groupId", student.GroupId);
                 command.Parameters.Add(groupIdParameter);
+                SqliteParameter recordBookParameter = new SqliteParameter("@recordBook", student.RecordBook);
+                command.Parameters.Add(recordBookParameter);
 
                 command.ExecuteNonQuery();
             }
@@ -631,12 +647,18 @@ namespace DatebaseCP.Utils
         {
             ObservableCollection<Post> result = new ObservableCollection<Post>();
 
-            string sql = @"SELECT * FROM Post";
+            string sql = @"SELECT p.* 
+                            FROM Post p 
+                            INNER JOIN TeacherPost tp 
+                            ON p.id = tp.Post_id 
+                            WHERE tp.Teacher_id = @teacherId";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
                 SqliteCommand command = new(sql, connection);
+                SqliteParameter teacherIdParameter = new SqliteParameter("@teacherId", teacherId);
+                command.Parameters.Add(teacherIdParameter);
 
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
@@ -652,6 +674,13 @@ namespace DatebaseCP.Utils
                     }
                 }
             }
+
+            return result;
+        }
+
+        public ObservableCollection<Post> GetAllPostsForTeacherEdit(int teacherId)
+        {
+            ObservableCollection<Post> result = GetAllPosts();
 
             var tmp = GetPostsForTeacher(teacherId);
 
@@ -856,11 +885,11 @@ namespace DatebaseCP.Utils
 
         #region Degree
 
-        public ObservableCollection<TeacherDegree> GetAllTeacherDegree()
+        public ObservableCollection<Degree> GetAllDegrees()
         {
-            ObservableCollection<TeacherDegree> result = new ObservableCollection<TeacherDegree>();
+            ObservableCollection<Degree> result = new ObservableCollection<Degree>();
 
-            string sql = @"SELECT * FROM TeacherDegree";
+            string sql = @"SELECT * FROM Degrees";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
@@ -876,7 +905,7 @@ namespace DatebaseCP.Utils
                             var id = int.Parse(reader["id"].ToString());
                             var name = reader["Name"].ToString();
 
-                            result.Add(new TeacherDegree(id, name));
+                            result.Add(new Degree(id, name));
                         }
                     }
                 }
@@ -885,18 +914,67 @@ namespace DatebaseCP.Utils
             return result;
         }
 
-        public TeacherDegree GetTeacherDegree(int id)
+        public ObservableCollection<Degree> GetAllDegreesForTeacher(int teacherId)
         {
-            TeacherDegree result = new TeacherDegree();
+            ObservableCollection<Degree> result = new ObservableCollection<Degree>();
 
-            string sql = @"SELECT * FROM TeacherDegree WHERE id = @degreeId";
+            string sql = @"SELECT d.* 
+                            FROM Degrees d 
+                            INNER JOIN TeacherDegree td
+                            ON d.id = td.Degree_id 
+                            WHERE td.Teacher_id = @teacherId";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
                 SqliteCommand command = new(sql, connection);
-                SqliteParameter idParameter = new SqliteParameter("@degreeId", id);
-                command.Parameters.Add(idParameter);
+                SqliteParameter teacherIdParameter = new SqliteParameter("@teacherId", teacherId);
+                command.Parameters.Add(teacherIdParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var name = reader["Name"].ToString();
+
+                            result.Add(new Degree(id, name));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public ObservableCollection<Degree> GetAllDegreesForTeacherEdit(int teacherId)
+        {
+            ObservableCollection<Degree> result = GetAllDegrees();
+
+            var tmp = GetDegreesForTeacher(teacherId);
+
+            foreach (var d in result)
+            {
+                if (tmp.Any(t => t.DegreeId == d.Id)) d.IsSelected = true;
+            }
+
+            return result;
+        }
+
+        public Degree GetDegree(int id)
+        {
+            Degree result = new Degree();
+
+            string sql = @"SELECT * FROM Degrees WHERE id = @degreeId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter degreeIdParameter = new SqliteParameter("@degreeId", id);
+                command.Parameters.Add(degreeIdParameter);
 
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
@@ -918,48 +996,99 @@ namespace DatebaseCP.Utils
             return result;
         }
 
-        public void InsertTeacherDegree(TeacherDegree teacherDegree)
+        public void InsertDegree(Degree degree)
         {
-            string sql = @"INSERT INTO TeacherDegree (Name) VALUES (@name); SELECT last_insert_rowid();";
+            string sql = @"INSERT INTO Degrees (Name) VALUES (@name); SELECT last_insert_rowid();";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
                 SqliteCommand command = new(sql, connection);
 
-                SqliteParameter nameParameter = new SqliteParameter("@name", teacherDegree.Name);
+                SqliteParameter nameParameter = new SqliteParameter("@name", degree.Name);
                 command.Parameters.Add(nameParameter);
 
                 var id = (long)command.ExecuteScalar();
-                teacherDegree.Id = (int)id;
+                degree.Id = (int)id;
             }
         }
 
-        public void UpdateTeacherDegree(TeacherDegree teacherDegree)
+        public void UpdateDegree(Degree degree)
         {
-            string sql = @"UPDATE TeacherDegree SET Name = @name WHERE id = @id";
+            string sql = @"UPDATE Degrees SET Name = @name WHERE id = @id";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
                 SqliteCommand command = new(sql, connection);
-                SqliteParameter idParameter = new SqliteParameter("@id", teacherDegree.Id);
+                SqliteParameter idParameter = new SqliteParameter("@id", degree.Id);
                 command.Parameters.Add(idParameter);
-                SqliteParameter nameParameter = new SqliteParameter("@name", teacherDegree.Name);
+                SqliteParameter nameParameter = new SqliteParameter("@name", degree.Name);
                 command.Parameters.Add(nameParameter);
                 command.ExecuteNonQuery();
             }
         }
 
-        public void DeleteTeacherDegree(TeacherDegree teacherDegree)
+        public void DeleteDegree(Degree degree)
         {
-            string sql = @"DELETE FROM TeacherDegree WHERE id = @id";
+            string sql = @"DELETE FROM Post WHERE id = @id";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
                 SqliteCommand command = new(sql, connection);
-                SqliteParameter idParameter = new SqliteParameter("@id", teacherDegree.Id);
+                SqliteParameter idParameter = new SqliteParameter("@id", degree.Id);
+                command.Parameters.Add(idParameter);
+                command.ExecuteNonQuery();
+            }
+        }
+        
+        #endregion
+
+        #region TeacherDegree
+
+        public ObservableCollection<TeacherDegree> GetDegreesForTeacher(int id)
+        {
+            ObservableCollection<TeacherDegree> result = new ObservableCollection<TeacherDegree>();
+
+            string sql = @"SELECT * FROM TeacherDegree WHERE Teacher_id = @teacherId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter teacherIdParameter = new SqliteParameter("@teacherId", id);
+                command.Parameters.Add(teacherIdParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var degreeId = int.Parse(reader["Degree_id"].ToString());
+                            result.Add(new TeacherDegree(id, degreeId));
+                        }
+                    }
+                    else
+                    {
+                        result = null;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public void DeleteDegreesWithTeacher(int teacherId)
+        {
+            string sql = @"DELETE FROM TeacherDegree WHERE Teacher_id = @teacherId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@teacherId", teacherId);
                 command.Parameters.Add(idParameter);
                 command.ExecuteNonQuery();
             }
@@ -969,19 +1098,58 @@ namespace DatebaseCP.Utils
         {
             int result;
 
-            string sql = @"SELECT COUNT(*) FROM Teachers WHERE TeachingDegree_id = @degreeId";
+            string sql = @"SELECT COUNT(*) FROM TeacherDegree WHERE Degree_id = @degreeId";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
                 connection.Open();
                 SqliteCommand command = new(sql, connection);
-                SqliteParameter idParameter = new SqliteParameter("@degreeId", degreeId);
-                command.Parameters.Add(idParameter);
+                SqliteParameter degreeIdParameter = new SqliteParameter("@degreeId", degreeId);
+                command.Parameters.Add(degreeIdParameter);
 
                 result = (int)(long)command.ExecuteScalar();
             }
 
             return result;
+        }
+
+        public void InsertTeacherDegrees(int teacherId, IEnumerable<Degree> degrees)
+        {
+            string sql = @"INSERT INTO TeacherDegree (Teacher_id, Degree_id) VALUES (@teacher_id, @degree_id)";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+
+                foreach (var d in degrees)
+                {
+                    SqliteCommand command = new(sql, connection);
+                    SqliteParameter teacher_id = new SqliteParameter("@teacher_id", teacherId);
+                    command.Parameters.Add(teacher_id);
+                    SqliteParameter degree_id = new SqliteParameter("@degree_id", d.Id);
+                    command.Parameters.Add(degree_id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void InsertTeacherDegree(TeacherDegree teacherDegree)
+        {
+            string sql = @"INSERT INTO TeacherDegree (Teacher_id, Degree_id) VALUES (@teacher_id, @degree_id)";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter teacher_id = new SqliteParameter("@teacher_id", teacherDegree.TeacherId);
+                command.Parameters.Add(teacher_id);
+                SqliteParameter degree_id = new SqliteParameter("@degree_id", teacherDegree.DegreeId);
+                command.Parameters.Add(degree_id);
+
+                command.ExecuteNonQuery();
+            }
         }
 
         #endregion
@@ -1129,13 +1297,13 @@ namespace DatebaseCP.Utils
                                 t.MiddleName,
                                 t.BirthDate,
                                 tt.Name as 'Title',
-                                td.Name as 'Degree',
-                                group_concat(p.name, ', ') as 'Post'
+                                group_concat(DISTINCT d.name) as 'Degree',
+                                group_concat(DISTINCT p.name) as 'Post'
                             FROM Teachers t 
                             INNER JOIN TeacherTitle tt
-                                ON t.TeachingTitle_id = tt.id
-                            INNER JOIN TeacherDegree td
-                                ON t.TeachingDegree_id = td.id
+                                ON t.TeachingTitle_id = tt.id                            
+                            INNER JOIN (TeacherDegree td INNER JOIN Degrees d ON td.Degree_id=d.id)
+                                ON t.id = td.Teacher_id
                             INNER JOIN (TeacherPost tp INNER JOIN Post p ON tp.Post_id=p.id) 
                                 ON t.id = tp.Teacher_id
                             GROUP BY t.id";
@@ -1200,9 +1368,8 @@ namespace DatebaseCP.Utils
                             var middleName = reader["MiddleName"].ToString();
                             var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
                             var titleId = int.Parse(reader["TeachingTitle_id"].ToString());
-                            var degreeId = int.Parse(reader["TeachingDegree_id"].ToString());
 
-                            result.Add(new Teacher(id, lastName, firstName, middleName, birthDate, titleId, degreeId));
+                            result.Add(new Teacher(id, lastName, firstName, middleName, birthDate, titleId));
                         }
                     }
                 }
@@ -1235,7 +1402,6 @@ namespace DatebaseCP.Utils
                             var middleName = reader["MiddleName"].ToString();
                             var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
                             var titleId = int.Parse(reader["TeachingTitle_id"].ToString());
-                            var degreeId = int.Parse(reader["TeachingDegree_id"].ToString());
 
                             result.Id = id;
                             result.LastName = lastName;
@@ -1243,7 +1409,9 @@ namespace DatebaseCP.Utils
                             result.MiddleName = middleName;
                             result.BirthDate = birthDate;
                             result.TitleId = titleId;
-                            result.DegreeId = degreeId;
+                            result.Posts = GetAllPostsForTeacher(id).ToList();
+                            result.Degrees = GetAllDegreesForTeacher(id).ToList();
+                            result.Lessons = GetAllLessonsForTeacher(id).ToList();
                         }
                     }
                 }
@@ -1251,10 +1419,49 @@ namespace DatebaseCP.Utils
             return result;
         }
 
+        public ObservableCollection<Teacher> GetTeacherForLesson(int lessonId)
+        {
+            ObservableCollection<Teacher> result = new ObservableCollection<Teacher>();
+
+            string sql = @"SELECT t.* FROM Teachers t INNER JOIN TeacherLesson tl ON t.id = tl.Teacher_id WHERE tl.Lesson_id = @lessonId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter lessonIdParameter = new SqliteParameter("@lessonId", lessonId);
+                command.Parameters.Add(lessonIdParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var lastName = reader["LastName"].ToString();
+                            var firstName = reader["FirstName"].ToString();
+                            var middleName = reader["MiddleName"].ToString();
+                            var birthDate = DateTime.Parse(reader["BirthDate"].ToString());
+                            var titleId = int.Parse(reader["TeachingTitle_id"].ToString());
+
+                            result.Add(new Teacher(id, lastName, firstName, middleName, birthDate, titleId));
+                        }
+                    }
+                    else
+                    {
+                        result = null;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public void InsertTeacher(Teacher teacher)
         {
             string sql =
-                @"INSERT INTO Teachers (LastName, FirstName, MiddleName, BirthDate, TeachingTitle_id, TeachingDegree_id) VALUES (@lastName, @firstName, @middleName, @birthDate, @teachingTitleId, @teachingDegreeId); SELECT last_insert_rowid();";
+                @"INSERT INTO Teachers (LastName, FirstName, MiddleName, BirthDate, TeachingTitle_id) VALUES (@lastName, @firstName, @middleName, @birthDate, @teachingTitleId); SELECT last_insert_rowid();";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
@@ -1271,8 +1478,6 @@ namespace DatebaseCP.Utils
                 command.Parameters.Add(birthDateParameter);
                 SqliteParameter teachingTitleId = new SqliteParameter("@teachingTitleId", teacher.TitleId);
                 command.Parameters.Add(teachingTitleId);
-                SqliteParameter teachingDegreeId = new SqliteParameter("@teachingDegreeId", teacher.DegreeId);
-                command.Parameters.Add(teachingDegreeId);
 
                 var id = (long)command.ExecuteScalar();
                 teacher.Id = (int)id;
@@ -1282,7 +1487,7 @@ namespace DatebaseCP.Utils
         public void UpdateTeacher(Teacher teacher)
         {
             string sql =
-                @"UPDATE Teachers SET LastName = @lastName, FirstName = @firstName, MiddleName = @middleName, BirthDate = @birthDate, TeachingTitle_id = @teachingTitleId, TeachingDegree_id = @teachingDegreeId WHERE id = @id";
+                @"UPDATE Teachers SET LastName = @lastName, FirstName = @firstName, MiddleName = @middleName, BirthDate = @birthDate, TeachingTitle_id = @teachingTitleId WHERE id = @id";
 
             using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
             {
@@ -1301,8 +1506,6 @@ namespace DatebaseCP.Utils
                 command.Parameters.Add(birthDateParameter);
                 SqliteParameter teachingTitleId = new SqliteParameter("@teachingTitleId", teacher.TitleId);
                 command.Parameters.Add(teachingTitleId);
-                SqliteParameter teachingDegreeId = new SqliteParameter("@teachingDegreeId", teacher.DegreeId);
-                command.Parameters.Add(teachingDegreeId);
 
                 command.ExecuteNonQuery();
             }
@@ -1354,6 +1557,55 @@ namespace DatebaseCP.Utils
             return result;
         }
 
+        public ObservableCollection<Lesson> GetAllLessonsForTeacher(int teacherId)
+        {
+            ObservableCollection<Lesson> result = new ObservableCollection<Lesson>();
+
+            string sql = @"SELECT l.* 
+                            FROM Lessons l
+                            INNER JOIN TeacherLesson tl
+                            ON l.id = tl.Lesson_id  
+                            WHERE tl.Teacher_id = @teacherId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter teacherIdParameter = new SqliteParameter("@teacherId", teacherId);
+                command.Parameters.Add(teacherIdParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id = int.Parse(reader["id"].ToString());
+                            var name = reader["Name"].ToString();
+
+                            result.Add(new Lesson(id, name));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public ObservableCollection<Lesson> GetAllLessonsForTeacherEdit(int teacherId)
+        {
+            ObservableCollection<Lesson> result = GetAllLessons();
+
+            var tmp = GetLessonsForTeacher(teacherId);
+
+            foreach (var l in result)
+            {
+                if (tmp.Any(t => t.LessonId == l.Id)) l.IsSelected = true;
+            }
+
+            return result;
+        }
+        
         public void InsertLesson(Lesson lesson)
         {
             string sql = @"INSERT INTO Lessons (Name) VALUES (@name); SELECT last_insert_rowid();";
@@ -1418,6 +1670,96 @@ namespace DatebaseCP.Utils
             }
 
             return result;
+        }
+
+        #endregion
+
+        #region TeacherLesson
+        
+        public void InsertTeacherLesson(TeacherLesson teacherLesson)
+        {
+            string sql = @"INSERT INTO TeacherLesson (Teacher_id, Lesson_id) VALUES (@teacher_id, @lesson_id)";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter teacher_id = new SqliteParameter("@teacher_id", teacherLesson.TeacherId);
+                command.Parameters.Add(teacher_id);
+                SqliteParameter lesson_id = new SqliteParameter("@lesson_id", teacherLesson.LessonId);
+                command.Parameters.Add(lesson_id);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void InsertTeacherLessons(int teacherId, IEnumerable<Lesson> lessons)
+        {
+            string sql = @"INSERT INTO TeacherLesson (Teacher_id, Lesson_id) VALUES (@teacher_id, @lesson_id)";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+
+                foreach (var l in lessons)
+                {
+                    SqliteCommand command = new(sql, connection);
+                    SqliteParameter teacher_id = new SqliteParameter("@teacher_id", teacherId);
+                    command.Parameters.Add(teacher_id);
+                    SqliteParameter lesson_id = new SqliteParameter("@lesson_id", l.Id);
+                    command.Parameters.Add(lesson_id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public ObservableCollection<TeacherLesson> GetLessonsForTeacher(int id)
+        {
+            ObservableCollection<TeacherLesson> result = new ObservableCollection<TeacherLesson>();
+
+            string sql = @"SELECT * FROM TeacherLesson WHERE Teacher_id = @teacherId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter teacherIdParameter = new SqliteParameter("@teacherId", id);
+                command.Parameters.Add(teacherIdParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var lessonId = int.Parse(reader["Lesson_id"].ToString());
+                            result.Add(new TeacherLesson(id, lessonId));
+                        }
+                    }
+                    else
+                    {
+                        result = null;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public void DeleteLessonsWithTeacher(int teacherId)
+        {
+            string sql = @"DELETE FROM TeacherLesson WHERE Teacher_id = @teacherId";
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@teacherId", teacherId);
+                command.Parameters.Add(idParameter);
+                command.ExecuteNonQuery();
+            }
         }
 
         #endregion
@@ -1578,6 +1920,60 @@ namespace DatebaseCP.Utils
             return myTable;
         }
 
+        public DataTable GetAllDiaresForTeacher(int id)
+        {
+            string sql = @"SELECT
+                                d.id,
+                                d.Date,
+                                l.Name as Lesson,
+                                tc.Name as Type,
+                                d.Score,
+                                s.LastName || ' ' || s.FirstName AS Student
+                        FROM Diary d 
+                        INNER JOIN Lessons l
+                            ON d.Lesson_id = l.id
+                        INNER JOIN TypesCertification tc
+                            ON d.Type_id = tc.id
+                        INNER JOIN Students s
+                            ON d.Student_id = s.id
+                        WHERE d.Teacher_id = @teacherId";
+
+            var myTable = new DataTable();
+            myTable.Columns.Add("id", typeof(int));
+            myTable.Columns.Add("Date", typeof(DateTime));
+            myTable.Columns.Add("Lesson", typeof(string));
+            myTable.Columns.Add("Type", typeof(string));
+            myTable.Columns.Add("Score", typeof(int));
+            myTable.Columns.Add("Student", typeof(string));
+
+            using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+            {
+                connection.Open();
+                SqliteCommand command = new(sql, connection);
+                SqliteParameter idParameter = new SqliteParameter("@teacherId", id);
+                command.Parameters.Add(idParameter);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            myTable.Rows.Add(
+                                int.Parse(reader["id"].ToString()),
+                                DateTime.Parse(reader["Date"].ToString()),
+                                reader["Lesson"].ToString(),
+                                reader["Type"].ToString(),
+                                int.Parse(reader["Score"].ToString()),
+                                reader["Student"].ToString()
+                            );
+                        }
+                    }
+                }
+            }
+            return myTable;
+        }
+
         public Diary GetDiary(int id)
         {
             Diary result = new Diary();
@@ -1616,7 +2012,6 @@ namespace DatebaseCP.Utils
 
                 }
             }
-
 
             return result;
         }
@@ -1722,6 +2117,31 @@ namespace DatebaseCP.Utils
             double result = 0;
 
             string sql = @"SELECT avg(d.Score) FROM Diary d INNER JOIN Students s ON d.Student_id = s.Id WHERE s.Group_id = @id";
+
+            try
+            {
+                using (var connection = new SqliteConnection($"Data source={_dbFileName}"))
+                {
+                    connection.Open();
+                    SqliteCommand command = new(sql, connection);
+                    SqliteParameter idParameter = new SqliteParameter("@id", id);
+                    command.Parameters.Add(idParameter);
+
+                    result = (double)command.ExecuteScalar();
+                }
+            }
+            catch
+            {
+            }
+
+            return result;
+        }
+
+        public double ScoreTeacher(int id)
+        {
+            double result = 0;
+
+            string sql = @"SELECT avg(Score) FROM Diary WHERE Teacher_id = @id";
 
             try
             {

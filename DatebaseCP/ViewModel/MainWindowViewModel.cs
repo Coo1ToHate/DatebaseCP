@@ -49,9 +49,9 @@ namespace DatebaseCP.ViewModel
 
                     #region students
 
-                    command.CommandText = "CREATE TABLE Students(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT NOT NULL, BirthDate TEXT, Group_id INTEGER NOT NULL)";
+                    command.CommandText = "CREATE TABLE Students(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT, BirthDate TEXT NOT NULL, Group_id INTEGER NOT NULL, RecordBook TEXT NOT NULL UNIQUE)";
                     command.ExecuteNonQuery();
-                    
+
                     #endregion
 
                     #region speciality
@@ -70,14 +70,14 @@ namespace DatebaseCP.ViewModel
 
                     #region groups
 
-                    command.CommandText = "CREATE TABLE Groups(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Speciality_id INTEGER NOT NULL, FormOfEducation_id INTEGER NOT NULL)";
+                    command.CommandText = "CREATE TABLE Groups(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Speciality_id INTEGER NOT NULL, FormOfEducation_id INTEGER NOT NULL, Curator_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
 
                     #endregion
 
                     #region teachers
 
-                    command.CommandText = "CREATE TABLE Teachers(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT NOT NULL, BirthDate TEXT, TeachingTitle_id INTEGER NOT NULL, TeachingDegree_id INTEGER NOT NULL)";
+                    command.CommandText = "CREATE TABLE Teachers(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, LastName TEXT NOT NULL, FirstName TEXT NOT NULL, MiddleName TEXT, BirthDate TEXT NOT NULL, TeachingTitle_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
 
                     #endregion
@@ -105,7 +105,21 @@ namespace DatebaseCP.ViewModel
 
                     #region degree
 
-                    command.CommandText = "CREATE TABLE TeacherDegree(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
+                    command.CommandText = "CREATE TABLE Degrees(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region teacherDegree
+
+                    command.CommandText = "CREATE TABLE TeacherDegree(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Teacher_id INTEGER NOT NULL, Degree_id INTEGER NOT NULL)";
+                    command.ExecuteNonQuery();
+
+                    #endregion
+
+                    #region teacherLesson
+
+                    command.CommandText = "CREATE TABLE TeacherLesson(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Teacher_id INTEGER NOT NULL, Lesson_id INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
 
                     #endregion
@@ -123,7 +137,7 @@ namespace DatebaseCP.ViewModel
 
                     #endregion
 
-                    //InitDemoDb();
+                    InitDemoDb();
                 }
             }
 
@@ -201,8 +215,8 @@ namespace DatebaseCP.ViewModel
                 if (_selectedGroup != null)
                 {
                     GroupInfo = $"{_selectedGroup.Name} - " +
-                                $"{ado.GetSpeciality(_selectedGroup.SpecialityID).Name} - " +
-                                $"{ado.GetFormOfEducation(_selectedGroup.FormOfEducationID).Name} - " +
+                                $"{ado.GetSpeciality(_selectedGroup.SpecialityId).Name} - " +
+                                $"{ado.GetFormOfEducation(_selectedGroup.FormOfEducationId).Name} - " +
                                 $"{ado.CountStudentsInGroup(_selectedGroup.Id)}";
                     Students = ado.GetStudentsInGroup(_selectedGroup.Id);
                 }
@@ -627,6 +641,10 @@ namespace DatebaseCP.ViewModel
                         ado.InsertTeacher(newTeacher);
                         ado.DeletePostsWithTeacher(newTeacher.Id);
                         ado.InsertTeacherPosts(newTeacher.Id, newTeacher.Posts);
+                        ado.DeleteDegreesWithTeacher(newTeacher.Id);
+                        ado.InsertTeacherDegrees(newTeacher.Id, newTeacher.Degrees);
+                        ado.DeleteLessonsWithTeacher(newTeacher.Id);
+                        ado.InsertTeacherLessons(newTeacher.Id, newTeacher.Lessons);
 
                         TeachersTables = ado.GetAllTeachersTable();
                     }
@@ -662,6 +680,10 @@ namespace DatebaseCP.ViewModel
                         ado.UpdateTeacher(updTeacher);
                         ado.DeletePostsWithTeacher(updTeacher.Id);
                         ado.InsertTeacherPosts(updTeacher.Id, updTeacher.Posts);
+                        ado.DeleteDegreesWithTeacher(updTeacher.Id);
+                        ado.InsertTeacherDegrees(updTeacher.Id, updTeacher.Degrees);
+                        ado.DeleteLessonsWithTeacher(updTeacher.Id);
+                        ado.InsertTeacherLessons(updTeacher.Id, updTeacher.Lessons);
 
                         TeachersTables = ado.GetAllTeachersTable();
                     }
@@ -684,6 +706,8 @@ namespace DatebaseCP.ViewModel
                 {
                     ado.DeleteTeacher(ado.GetTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString())));
                     ado.DeletePostsWithTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString()));
+                    ado.DeleteDegreesWithTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString()));
+                    ado.DeleteLessonsWithTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString()));
 
                     TeachersTables = ado.GetAllTeachersTable();
                 }, obj => SelectedDataRow != null);
@@ -790,6 +814,32 @@ namespace DatebaseCP.ViewModel
 
         #endregion
 
+        #region TeacherReportCommand
+
+        private RelayCommand _teacherReportCommand;
+
+        public RelayCommand TeacherReportCommand
+        {
+            get
+            {
+                return _teacherReportCommand ??= new RelayCommand(obj =>
+                {
+                    Teacher teacher = ado.GetTeacher(int.Parse(SelectedDataRow.Row.ItemArray[0].ToString()));
+
+                    ReportTeacherWindow reportTeacherWindow = new ReportTeacherWindow()
+                    {
+                        DataContext = new ReportTeacherWindowViewModel(teacher)
+                    };
+
+                    reportTeacherWindow.Owner = obj as Window;
+                    reportTeacherWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    reportTeacherWindow.ShowDialog();
+                }, obj => SelectedDataRow != null);
+            }
+        }
+
+        #endregion
+
         #endregion
 
         private void InitDemoDb()
@@ -802,7 +852,9 @@ namespace DatebaseCP.ViewModel
                     FirstName = $"Имя_{i + 1}",
                     MiddleName = $"Отчество_{i + 1}",
                     BirthDate = DateTime.Now.AddYears(-17 - i).AddDays(-10 * i),
-                    GroupId = i % 2 + 1
+                    GroupId = i % 2 + 1,
+                    RecordBook = $"Зачетка_{i + 1}"
+
                 };
                 ado.InsertStudent(tmp);
 
@@ -835,8 +887,9 @@ namespace DatebaseCP.ViewModel
                 Group tmp3 = new Group
                 {
                     Name = $"Группа_{i + 1}",
-                    SpecialityID = i % 2 + 1,
-                    FormOfEducationID = i % 2 + 1
+                    SpecialityId = i % 2 + 1,
+                    FormOfEducationId = i % 2 + 1,
+                    CuratorId = i % 2 + 1
                 };
                 ado.InsertGroup(tmp3);
 
@@ -846,17 +899,11 @@ namespace DatebaseCP.ViewModel
                 };
                 ado.InsertTeacherTitle(tmp4);
 
-                TeacherDegree tmp5 = new TeacherDegree
-                {
-                    Name = $"Ученая_степень_{i + 1}"
-                };
-                ado.InsertTeacherDegree(tmp5);
-
-                TypeCertification tmp6 = new TypeCertification
+                TypeCertification tmp5 = new TypeCertification
                 {
                     Name = $"Вид работы {i + 1}"
                 };
-                ado.InsertTypeCertification(tmp6);
+                ado.InsertTypeCertification(tmp5);
             }
 
             for (int i = 0; i < 4; i++)
@@ -867,29 +914,48 @@ namespace DatebaseCP.ViewModel
                     FirstName = $"Имя_{i + 1}",
                     MiddleName = $"Отчество_{i + 1}",
                     BirthDate = DateTime.Now.AddYears(-42 - i).AddDays(-10 * i),
-                    TitleId = i % 2 + 1,
-                    DegreeId = i % 2 + 1
+                    TitleId = i % 2 + 1
                 };
                 ado.InsertTeacher(tmp);
 
-                Post tmp2 = new Post
+                Degree tmp2 = new Degree
+                {
+                    Name = $"Ученая_степень_{i + 1}"
+                };
+                ado.InsertDegree(tmp2);
+
+                TeacherDegree tmp3 = new TeacherDegree
+                {
+                    TeacherId = i + 1,
+                    DegreeId = i + 1
+                };
+                ado.InsertTeacherDegree(tmp3);
+
+                Post tmp4 = new Post
                 {
                     Name = $"Должность_{i + 1}"
                 };
-                ado.InsertPost(tmp2);
+                ado.InsertPost(tmp4);
 
-                TeacherPost tmp3 = new TeacherPost
+                TeacherPost tmp5 = new TeacherPost
                 {
                     TeacherId = i + 1,
                     PostId = i + 1
                 };
-                ado.InsertTeacherPost(tmp3);
+                ado.InsertTeacherPost(tmp5);
 
-                Lesson tmp4 = new Lesson
+                Lesson tmp6 = new Lesson
                 {
                     Name = $"Предмет_{i + 1}"
                 };
-                ado.InsertLesson(tmp4);
+                ado.InsertLesson(tmp6);
+
+                TeacherLesson tmp7 = new TeacherLesson
+                {
+                    TeacherId = i + 1,
+                    LessonId = i + 1
+                };
+                ado.InsertTeacherLesson(tmp7);
             }
         }
     }

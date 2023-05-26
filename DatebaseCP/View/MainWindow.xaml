@@ -178,7 +178,8 @@
                                             <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
                                             <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
                                             <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
-                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
+                                            <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.MM.yyyy\}}"/>
+                                            <DataGridTextColumn Header="Зачетная книжка" Binding="{Binding Path=RecordBook}" Width="*"/>
                                         </DataGrid.Columns>
 
                                     </DataGrid>
@@ -198,6 +199,8 @@
                                     <StackPanel Grid.Column="0" Grid.Row="0" Margin="2, 5, 2, 0">
                                         <Grid Height="25">
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="26"/>
+                                                <ColumnDefinition Width="26"/>
                                                 <ColumnDefinition Width="26"/>
                                                 <ColumnDefinition Width="26"/>
                                                 <ColumnDefinition Width="26"/>
@@ -224,6 +227,13 @@
                                                     BorderBrush="CadetBlue"
                                                     ToolTip="Удалить преподавателя" Command="{Binding DeleteTeacherCommand}">
                                                 <fa:ImageAwesome Icon="Solid_TrashCan" PrimaryColor="Red" Margin="2"/>
+                                            </Button>
+                                            <Button Grid.Column="4" Grid.Row="0"
+                                                    Margin="0, 0, 1, 0"
+                                                    Background="AliceBlue"
+                                                    BorderBrush="CadetBlue"
+                                                    ToolTip="Информация о преподавателе" Command="{Binding TeacherReportCommand}">
+                                                <fa:ImageAwesome Icon="Solid_ChartLine" PrimaryColor="DimGray" Margin="2"/>
                                             </Button>
                                         </Grid>
                                     </StackPanel>

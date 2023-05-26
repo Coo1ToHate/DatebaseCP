@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatebaseCP.View"
-        Title="{Binding Title}" Height="200" Width="400"
+        Title="{Binding Title}" Height="230" Width="400"
         ResizeMode="NoResize" Background="Beige">
-    <Grid ShowGridLines="True">
+    <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
@@ -26,6 +27,21 @@
         <ComboBox Grid.Column="1" Grid.Row="2" Margin="5" DisplayMemberPath="Name" ItemsSource="{Binding Specialities}" SelectedItem="{Binding SelectedSpeciality}"/>
         <TextBlock Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" Text="Форма обучения:" Margin="5"/>
         <ComboBox Grid.Column="1" Grid.Row="3" Margin="5" DisplayMemberPath="Name" ItemsSource="{Binding FormOfEducations}" SelectedItem="{Binding SelectedFormOfEducations}"/>
-        <Button Grid.Column="1" Grid.Row="4" Content="Сохранить" Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Margin="5"/>
+        <TextBlock Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" Text="Куратор:" Margin="5"/>
+        <ComboBox Grid.Column="1" Grid.Row="4" Margin="5" ItemsSource="{Binding Curators}" SelectedItem="{Binding SelectedCurator}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="LastName"/>
+                                <Binding Path="FirstName"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button Grid.Column="1" Grid.Row="5" Content="Сохранить" Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Margin="5"/>
     </Grid>
 </Window>

@@ -13,13 +13,13 @@ namespace DatebaseCP.ViewModel
         private ADO ado = new ADO();
 
         private string _title;
-        private ObservableCollection<TeacherDegree> _degrees;
-        private TeacherDegree _selectedDegree;
+        private ObservableCollection<Degree> _degrees;
+        private Degree _selectedDegree;
 
         public ListDegreeWindowViewModel()
         {
             _title = "Ученые степени";
-            _degrees = ado.GetAllTeacherDegree();
+            _degrees = ado.GetAllDegrees();
         }
 
         public string Title
@@ -32,7 +32,7 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        public ObservableCollection<TeacherDegree> Degrees
+        public ObservableCollection<Degree> Degrees
         {
             get => _degrees;
             set
@@ -42,7 +42,7 @@ namespace DatebaseCP.ViewModel
             }
         }
 
-        public TeacherDegree SelectedDegree
+        public Degree SelectedDegree
         {
             get => _selectedDegree;
             set
@@ -64,7 +64,7 @@ namespace DatebaseCP.ViewModel
             {
                 return _addDegreeCommand ??= new RelayCommand(obj =>
                 {
-                    TeacherDegree newDegree = new TeacherDegree();
+                    Degree newDegree = new Degree();
 
                     ListDegreeEditWindow listDegreeEditWindow = new ListDegreeEditWindow
                     {
@@ -77,8 +77,8 @@ namespace DatebaseCP.ViewModel
 
                     if (listDegreeEditWindow.DialogResult.Value)
                     {
-                        ado.InsertTeacherDegree(newDegree);
-                        Degrees = ado.GetAllTeacherDegree();
+                        ado.InsertDegree(newDegree);
+                        Degrees = ado.GetAllDegrees();
                     }
                 });
             }
@@ -96,7 +96,7 @@ namespace DatebaseCP.ViewModel
             {
                 return _editDegreeCommand ??= new RelayCommand(obj =>
                 {
-                    TeacherDegree updDegree = SelectedDegree;
+                    Degree updDegree = SelectedDegree;
 
                     ListDegreeEditWindow listDegreeEditWindow = new ListDegreeEditWindow
                     {
@@ -109,8 +109,8 @@ namespace DatebaseCP.ViewModel
 
                     if (listDegreeEditWindow.DialogResult.Value)
                     {
-                        ado.UpdateTeacherDegree(updDegree);
-                        Degrees = ado.GetAllTeacherDegree();
+                        ado.UpdateDegree(updDegree);
+                        Degrees = ado.GetAllDegrees();
                     }
 
                 }, obj => SelectedDegree != null);
@@ -129,8 +129,8 @@ namespace DatebaseCP.ViewModel
             {
                 return _deleteDegreeCommand ??= new RelayCommand(obj =>
                 {
-                    ado.DeleteTeacherDegree(SelectedDegree);
-                    Degrees = ado.GetAllTeacherDegree();
+                    ado.DeleteDegree(SelectedDegree);
+                    Degrees = ado.GetAllDegrees();
                 }, obj => SelectedDegree != null && ado.CountTeacherWithDegree(SelectedDegree.Id) == 0);
             }
         }

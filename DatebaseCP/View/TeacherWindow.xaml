@@ -4,14 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatebaseCP.Utils"
-        Title="{Binding Title}" Height="380" Width="400"
+        Title="{Binding Title}" Height="550" Width="400"
         ResizeMode="NoResize" Background="Beige">
     <Window.Resources>
         <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
         </Style>
     </Window.Resources>
-    <Grid ShowGridLines="True">
+    <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
@@ -19,7 +19,8 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="100"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -40,11 +41,11 @@
         <TextBlock Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right" Text="Звание:" Margin="5"/>
         <ComboBox Grid.Column="1" Grid.Row="5" Margin="5" DisplayMemberPath="Name" ItemsSource="{Binding TeacherTitles}" SelectedItem="{Binding SelectedTeacherTitle}"/>
         <TextBlock Grid.Column="0" Grid.Row="6" HorizontalAlignment="Right" Text="Ученая степень:" Margin="5"/>
-        <ComboBox Grid.Column="1" Grid.Row="6" Margin="5" DisplayMemberPath="Name" ItemsSource="{Binding TeacherDegrees}" SelectedItem="{Binding SelectedTeacherDegree}"/>
+        <ListBox Grid.Column="1" Grid.Row="6" DisplayMemberPath="Name" ItemsSource="{Binding AllDegrees}" SelectionMode="Multiple" Margin="5"/>
         <TextBlock Grid.Column="0" Grid.Row="7" HorizontalAlignment="Right" Text="Должность:" Margin="5"/>
         <ListBox Grid.Column="1" Grid.Row="7" DisplayMemberPath="Name" ItemsSource="{Binding AllPosts}" SelectionMode="Multiple" Margin="5"/>
-        
-
-        <Button Grid.Column="1" Grid.Row="8" Content="Сохранить" Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Margin="5"/>
+        <TextBlock Grid.Column="0" Grid.Row="8" HorizontalAlignment="Right" Text="Предметы:" Margin="5"/>
+        <ListBox Grid.Column="1" Grid.Row="8" DisplayMemberPath="Name" ItemsSource="{Binding AllLessons}" SelectionMode="Multiple" Margin="5"/>
+        <Button Grid.Column="1" Grid.Row="9" Content="Сохранить" Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Margin="5"/>
     </Grid>
 </Window>

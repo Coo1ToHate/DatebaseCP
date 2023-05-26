@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace DatebaseCP.Models
+﻿namespace DatebaseCP.Models
 {
     internal class Group
     {
@@ -8,14 +6,15 @@ namespace DatebaseCP.Models
         {
         }
 
-        public Group(string name, int specialityId, int formOfEducationId)
+        public Group(string name, int specialityId, int formOfEducationId, int curatorId)
         {
             Name = name;
-            SpecialityID = specialityId;
-            FormOfEducationID = formOfEducationId;
+            SpecialityId = specialityId;
+            FormOfEducationId = formOfEducationId;
+            CuratorId = curatorId;
         }
 
-        public Group(int id, string name, int specialityId, int formOfEducationId) : this(name, specialityId, formOfEducationId)
+        public Group(int id, string name, int specialityId, int formOfEducationId, int curatorId) : this(name, specialityId, formOfEducationId, curatorId)
         {
             Id = id;
         }
@@ -24,8 +23,10 @@ namespace DatebaseCP.Models
 
         public string Name { get; set; }
 
-        public int SpecialityID { get; set; }
+        public int SpecialityId { get; set; }
 
-        public int FormOfEducationID { get; set; }
+        public int FormOfEducationId { get; set; }
+
+        public int CuratorId { get; set; }
     }
 }

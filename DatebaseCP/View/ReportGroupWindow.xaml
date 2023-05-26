@@ -12,7 +12,7 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="180"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -42,6 +42,7 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -49,15 +50,17 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" Text="Название:" Margin="5"/>
-            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Name}" Margin="5"/>
+            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Group.Name}" Margin="5"/>
             <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" Text="Специализация:" Margin="5"/>
             <TextBlock Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding Speciality}"/>
             <TextBlock Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" Text="Форма обучения:" Margin="5"/>
             <TextBlock Grid.Column="1" Grid.Row="2" Margin="5" Text="{Binding FormOfEducations}"/>
-            <TextBlock Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" Text="Количество студентов:" Margin="5"/>
-            <TextBlock Grid.Column="1" Grid.Row="3" Margin="5" Text="{Binding CountStudents}"/>
-            <TextBlock Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" Text="Средняя оценка:" Margin="5"/>
-            <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding Score, StringFormat=\{0:f2\}}" Margin="5"/>
+            <TextBlock Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" Text="Куратор:" Margin="5"/>
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding CuratorName}" Margin="5"/>
+            <TextBlock Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" Text="Количество студентов:" Margin="5"/>
+            <TextBlock Grid.Column="1" Grid.Row="4" Margin="5" Text="{Binding CountStudents}"/>
+            <TextBlock Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right" Text="Средняя оценка:" Margin="5"/>
+            <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding Score, StringFormat=\{0:f2\}}" Margin="5"/>
         </Grid>
 
         <DataGrid Grid.Column="0" Grid.Row="2"
@@ -73,7 +76,7 @@
                 <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
                 <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
                 <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
-                <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.mm.yyyy\}}" Width="*"/>
+                <DataGridTextColumn Header="День рождения" Binding="{Binding Path=BirthDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

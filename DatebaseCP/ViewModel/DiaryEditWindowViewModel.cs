@@ -25,26 +25,29 @@ namespace DatebaseCP.ViewModel
         private int _selectedScore;
         private int _idStudent;
 
+        ADO ado = new ADO();
 
         public DiaryEditWindowViewModel(Diary diary, int idStudent)
         {
-            ADO ado = new ADO();
-            _title = "Добавление оценки";
+            Title = "Добавление оценки";
             _diary = diary;
-            _date = DateTime.Now;
-            _lessons = ado.GetAllLessons();
-            _typeCertifications = ado.GetAllTypeCertifications();
-            _teachers = ado.GetAllTeachers();
-            _scoreList = new List<int>() { 1, 2, 3, 4, 5 };
+            Date = DateTime.Now;
+            Lessons = ado.GetAllLessons();
+            TypeCertifications = ado.GetAllTypeCertifications();
+            ScoreList = new List<int>() { 1, 2, 3, 4, 5 };
             _idStudent = idStudent;
 
             if (diary.Id != 0)
             {
-                _title = "Редактирование оценки";
-                _selectedLesson = _lessons.First(l => l.Id == diary.LessonId);
-                _selectedTypeCertification = _typeCertifications.First(t => t.Id == diary.TypeId);
-                _selectedScore = _scoreList.First(s => s == diary.Score);
-                _selectedTeacher = _teachers.First(t => t.Id == diary.TeacherId);
+                Title = "Редактирование оценки";
+                SelectedLesson = _lessons.First(l => l.Id == diary.LessonId);
+                SelectedTypeCertification = _typeCertifications.First(t => t.Id == diary.TypeId);
+                SelectedScore = _scoreList.First(s => s == diary.Score);
+                SelectedTeacher = _teachers.First(t => t.Id == diary.TeacherId);
+            }
+            else
+            {
+                SelectedLesson = _lessons.FirstOrDefault();
             }
 
         }
@@ -85,6 +88,7 @@ namespace DatebaseCP.ViewModel
             set
             {
                 _selectedLesson = value;
+                Teachers = ado.GetTeacherForLesson(_selectedLesson.Id);
                 OnPropertyChanged();
             }
         }

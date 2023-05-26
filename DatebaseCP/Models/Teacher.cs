@@ -9,22 +9,21 @@ namespace DatebaseCP.Models
         {
         }
 
-        public Teacher(string lastName, string firstName, string middleName, DateTime birthDate, int titleId, int degreeId) : 
+        public Teacher(string lastName, string firstName, string middleName, DateTime birthDate, int titleId) : 
             base(lastName, firstName, middleName, birthDate)
         {
             TitleId = titleId;
-            DegreeId = degreeId;
         }
 
-        public Teacher(int id,string lastName, string firstName, string middleName, DateTime birthDate, int titleId, int degreeId) :
+        public Teacher(int id,string lastName, string firstName, string middleName, DateTime birthDate, int titleId) :
             base(id, lastName, firstName, middleName, birthDate)
         {
             TitleId = titleId;
-            DegreeId = degreeId;
         }
 
         public int TitleId { get; set; }
-        public int DegreeId { get; set; }
         public List<Post> Posts { get; set; } = new List<Post>();
+        public List<Degree> Degrees { get; set; } = new List<Degree>();
+        public List<Lesson> Lessons { get; set; } = new List<Lesson>();
     }
 }

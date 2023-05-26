@@ -2,22 +2,17 @@
 {
     internal class TeacherDegree
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int TeacherId { get; set; }
+        public int DegreeId { get; set; }
         
         public TeacherDegree()
         {
         }
 
-        public TeacherDegree(int id, string name)
+        public TeacherDegree(int teacherId, int degreeId)
         {
-            Id = id;
-            Name = name;
-        }
-
-        public override string ToString()
-        {
-            return Name;
+            TeacherId = teacherId;
+            DegreeId = degreeId;
         }
     }
 }

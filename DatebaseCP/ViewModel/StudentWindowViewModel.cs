@@ -19,6 +19,7 @@ namespace DatebaseCP.ViewModel
         private DateTime _birthDate;
         private IEnumerable<Group> _groups;
         private Group _selectedGroup;
+        private string _recordBook;
 
         public StudentWindowViewModel(Student student)
         {
@@ -31,6 +32,7 @@ namespace DatebaseCP.ViewModel
             _lastName = student.LastName;
             _middleName = student.MiddleName;
             _birthDate = DateTime.Now.AddYears(-20);
+            _recordBook = student.RecordBook;
 
             if (FirstName != null)
             {
@@ -109,6 +111,16 @@ namespace DatebaseCP.ViewModel
             }
         }
 
+        public string RecordBook
+        {
+            get => _recordBook;
+            set
+            {
+                _recordBook = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region SaveCommand
 
         private RelayCommand _saveCommand;
@@ -124,12 +136,13 @@ namespace DatebaseCP.ViewModel
                     _student.MiddleName = MiddleName;
                     _student.BirthDate = BirthDate;
                     _student.GroupId = SelectedGroup.Id;
+                    _student.RecordBook = RecordBook;
                     
                     Window window = obj as Window;
                     window.DialogResult = true;
                     window.Close();
                 },
-                    obj=> !string.IsNullOrEmpty(LastName) || !string.IsNullOrEmpty(FirstName));
+                    obj=> !string.IsNullOrEmpty(LastName) || !string.IsNullOrEmpty(FirstName) || !string.IsNullOrEmpty(RecordBook));
             }
         }
 

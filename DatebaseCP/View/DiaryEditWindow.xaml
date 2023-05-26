@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DatebaseCP.View"
         Title="{Binding Title}" Height="250" Width="400"
         ResizeMode="NoResize" Background="Beige">
-    <Grid ShowGridLines="True">
+    <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
