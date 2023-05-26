@@ -4,9 +4,9 @@ C# + wpf + MVVM + ADO.NET + SQLite
 
 ## БД, интерфейс и запросы
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/4201003c-d84a-42be-9e7b-0b48e948da53)
+![изображение](/assets/Screenshot_7.jpg)
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/dc232134-3c2a-476d-a472-03bb99de68d3)
+![изображение](/assets/Screenshot_1.jpg)
 
 ```sql
 SELECT * FROM Groups
@@ -14,7 +14,7 @@ SELECT * FROM Students WHERE Group_id = @groupId
 SELECT COUNT(*) FROM Students WHERE Group_id = @groupId
 ```
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/dd758aa2-4a0a-4dfc-8055-1544e258b34e)
+![изображение](/assets/Screenshot_2.jpg)
 
 ```sql
 SELECT
@@ -36,7 +36,7 @@ INNER JOIN (TeacherPost tp INNER JOIN Post p ON tp.Post_id=p.id)
 GROUP BY t.id
 ```
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/8f0a465f-8d7e-423c-8bb3-a49445a1de66)
+![изображение](/assets/Screenshot_3.jpg)
 
 ```sql
 SELECT
@@ -57,19 +57,19 @@ INNER JOIN Teachers t
 WHERE d.Student_id = @studentId
 ```
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/9284b88c-12b6-450e-8d01-017d07429586)
+![изображение](/assets/Screenshot_4.jpg)
 
 ```sql
 SELECT avg(d.Score) FROM Diary d INNER JOIN Students s ON d.Student_id = s.Id WHERE s.Group_id = @id
 ```
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/34d33619-640c-464b-8208-800b89e8273b)
+![изображение](/assets/Screenshot_5.jpg)
 
 ```sql
 SELECT avg(Score) FROM Diary WHERE Student_id = @id
 ```
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/ab7ee44e-03f8-4ae4-9bee-804b8ef79c7a)
+![изображение](/assets/Screenshot_6.jpg)
 
 ```sql
 SELECT avg(Score) FROM Diary WHERE Teacher_id = @id
@@ -82,7 +82,7 @@ SELECT avg(Score) FROM Diary WHERE Teacher_id = @id
 Для реализации супертипа и подтипов в реляционной базе данных можно использовать одну общую таблицу для супертипа "СуперТип", а так-же отдельные таблицы для каждого подтипа "Подтип1" и "Подтип2". Табли-ца "СуперТип" будет содержать общие атрибуты, а каждая из таблиц подтипов будет содержать уникальные атрибуты и ключевой атрибут, который будет ссылаться на запись в таблице "СуперТип".<br />
 Пример из сущностей «Преподаватель» и «Студент».
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/aa07fcd2-f267-431a-af5d-b145c878af3d)
+![изображение](/assets/Screenshot_8.jpg)
 
 2. Создайте SQL-запрос по Вашей БД, выдающий ФИО только тех преподавателей, которые поставили максимальное количество оценок «удовлетворительно» по всем закрепленным предметам.
 
@@ -102,7 +102,7 @@ FROM (
 ))
 ```
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/1ef95c15-4529-4a51-8fc3-04a28f3f14b1)
+![изображение](/assets/Screenshot_9.jpg)
 
-![изображение](https://github.com/Coo1ToHate/DatebaseCP/assets/77828075/277bed69-b451-4d37-ad78-1b6b2e92d876)
+![изображение](/assets/Screenshot_10.jpg)
 
